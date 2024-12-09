@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &1743285533662852597
+--- !u!1001 &3218735569956488702
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -26,15 +26,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9857cbcedb910284a982de506d318f11, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0.000000081460335
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9857cbcedb910284a982de506d318f11, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -1.110223e-16
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9857cbcedb910284a982de506d318f11, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: -1.1102233e-16
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9857cbcedb910284a982de506d318f11, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -58,20 +58,20 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9857cbcedb910284a982de506d318f11, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1976011122206755283}
+      addedObject: {fileID: -3675761631294203682}
   m_SourcePrefab: {fileID: 100100000, guid: 9857cbcedb910284a982de506d318f11, type: 3}
---- !u!1 &1508720327801178276 stripped
+--- !u!1 &2335775166277548207 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9857cbcedb910284a982de506d318f11, type: 3}
-  m_PrefabInstance: {fileID: 1743285533662852597}
+  m_PrefabInstance: {fileID: 3218735569956488702}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &1976011122206755283
+--- !u!64 &-3675761631294203682
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1508720327801178276}
+  m_GameObject: {fileID: 2335775166277548207}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

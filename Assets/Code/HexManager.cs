@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NUnit.Framework;
 using UnityEngine;
 
 namespace Code
@@ -8,7 +9,7 @@ namespace Code
     {
         public static HexManager Instance { get; private set; } // Singleton instance
 
-        public GameObject hexPrefab; // Prefab for the hex tile
+        public List<GameObject> hexPrefabs; // Prefab for the hex tile
         public GameObject placeholderPrefab; // Prefab for the placeholder tile
         public Transform hexParent; // Parent object for hexes
         public Transform placeholderParent; // Parent object for placeholders
@@ -53,6 +54,7 @@ namespace Code
             }
 
             // Instantiate the hex at the given position
+            var hexPrefab = hexPrefabs[UnityEngine.Random.Range(0, hexPrefabs.Count)];
             GameObject newHex = Instantiate(hexPrefab, worldPosition, Quaternion.identity, hexParent);
             takenHexes.Add(hexCoordinates);
             lastPlacedHex = newHex;
