@@ -5,19 +5,19 @@ namespace Code
 {
     public class InputController : MonoBehaviour
     {
-        private Vector3 lastMousePosition;
+        private Vector3 _lastMousePosition;
         public float cameraDragSpeedx = 0.1f;
         public float cameraDragSpeedy = 0.1f;
         public Transform cameraTransform; 
-        private Vector3 clickStartPosition;
-        private float clickThreshold = 0.2f; // Maximum movement threshold for a click
-        private float maxClickDuration = 0.3f; // Maximum time duration for a click
-        private float clickStartTime;
-        private HexManager hexManager;
+        private Vector3 _clickStartPosition;
+        private float _clickThreshold = 0.2f; // Maximum movement threshold for a click
+        private float _maxClickDuration = 0.3f; // Maximum time duration for a click
+        private float _clickStartTime;
+        private HexManager _hexManager;
 
         private void Start()
         {
-            hexManager = MainContainer.Instance.Resolve<HexManager>();
+            _hexManager = MainContainer.instance.Resolve<HexManager>();
         }
 
         private void Update()
@@ -30,31 +30,31 @@ namespace Code
         {
             if (Input.GetMouseButtonDown(0))
             {
-                clickStartPosition = Input.mousePosition;
-                clickStartTime = Time.time;
+                _clickStartPosition = Input.mousePosition;
+                _clickStartTime = Time.time;
             }
 
             if (Input.GetMouseButtonUp(0))
             {
                 Vector3 clickEndPosition = Input.mousePosition;
-                float clickDuration = Time.time - clickStartTime;
+                float clickDuration = Time.time - _clickStartTime;
 
-                if (Vector3.Distance(clickStartPosition, clickEndPosition) < clickThreshold && clickDuration <= maxClickDuration)
+                if (Vector3.Distance(_clickStartPosition, clickEndPosition) < _clickThreshold && clickDuration <= _maxClickDuration)
                 {
                     HandleClick();
                 }
             }
 
-            if (hexManager != null && hexManager.lastPlacedHex != null)
+            if (_hexManager != null && _hexManager.LastPlacedHex != null)
             {
                 if (Input.GetMouseButtonDown(1))
                 {
-                    hexManager.lastPlacedHex.transform.Rotate(0, 60, 0); // Rotate clockwise
+                    _hexManager.LastPlacedHex.transform.Rotate(0, 60, 0); // Rotate clockwise
                 }
 
                 if (Input.GetMouseButtonDown(2))
                 {
-                    hexManager.lastPlacedHex.transform.Rotate(0, -60, 0); // Rotate counterclockwise
+                    _hexManager.LastPlacedHex.transform.Rotate(0, -60, 0); // Rotate counterclockwise
                 }
             }
         }
@@ -76,15 +76,15 @@ namespace Code
         {
             if (Input.GetMouseButtonDown(0))
             {
-                lastMousePosition = Input.mousePosition;
+                _lastMousePosition = Input.mousePosition;
             }
 
             if (Input.GetMouseButton(0))
             {
-                Vector3 delta = Input.mousePosition - lastMousePosition;
+                Vector3 delta = Input.mousePosition - _lastMousePosition;
                 Vector3 movement = new Vector3(delta.y * cameraDragSpeedx, 0, -delta.x * cameraDragSpeedy);
                 cameraTransform.localPosition += movement;
-                lastMousePosition = Input.mousePosition;
+                _lastMousePosition = Input.mousePosition;
             }
         }
     }

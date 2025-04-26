@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class CheatManager : MonoBehaviour
 {
-    private EventBus eventBus;
+    private EventBus _eventBus;
     
     [SerializeField] private Button springButton;
     [SerializeField] private Button summerButton;
@@ -11,11 +11,11 @@ public class CheatManager : MonoBehaviour
     [SerializeField] private Button winterButton;
     void Start()
     {
-        eventBus = MainContainer.Instance.Resolve<EventBus>();
-        springButton.onClick.AddListener(() => eventBus.Fire(new OnSpringButtonClickEvent()));
-        summerButton.onClick.AddListener(() => eventBus.Fire(new OnSummerButtonClickEvent()));
-        fallButton.onClick.AddListener(() => eventBus.Fire(new OnFallButtonClickEvent()));
-        winterButton.onClick.AddListener(() => eventBus.Fire(new OnWinterButtonClickEvent()));
+        _eventBus = MainContainer.instance.Resolve<EventBus>();
+        springButton.onClick.AddListener(() => _eventBus.Fire(new OnSpringButtonClickEvent()));
+        summerButton.onClick.AddListener(() => _eventBus.Fire(new OnSummerButtonClickEvent()));
+        fallButton.onClick.AddListener(() => _eventBus.Fire(new OnFallButtonClickEvent()));
+        winterButton.onClick.AddListener(() => _eventBus.Fire(new OnWinterButtonClickEvent()));
     }
 }
 

@@ -1,11 +1,11 @@
 public class MainContainer : Container
 {
-    public static MainContainer Instance;
+    public static MainContainer instance;
     
     private void Awake()
     {
         base.Awake();
-        Instance = this;
+        instance = this;
         Register(new EventBus());
     }
 }

@@ -18,28 +18,28 @@ namespace Code
 
         public GameObject initialHex; // Reference to the initial hex on the scene
 
-        private HashSet<Vector2Int> takenHexes = new HashSet<Vector2Int>(); // Tracks all taken hexes
-        private List<GameObject> activePlaceholders = new List<GameObject>(); // Tracks active placeholders
-        [NonSerialized]public GameObject lastPlacedHex;
-        private EventBus eventBus;
-        private EventType currentEventType = EventType.None;
+        private HashSet<Vector2Int> _takenHexes = new HashSet<Vector2Int>(); // Tracks all taken hexes
+        private List<GameObject> _activePlaceholders = new List<GameObject>(); // Tracks active placeholders
+        [NonSerialized]public GameObject LastPlacedHex;
+        private EventBus _eventBus;
+        private EventType _currentEventType = EventType.None;
         private void Awake()
         {
-            MainContainer.Instance.Register(this);
+            MainContainer.instance.Register(this);
         }
 
         private void Start()
         {
-            eventBus = MainContainer.Instance.Resolve<EventBus>();
-            eventBus.Subscribe<OnSpringButtonClickEvent>(OnSpringButtonClick);
-            eventBus.Subscribe<OnSummerButtonClickEvent>(OnSummerButtonClick);
-            eventBus.Subscribe<OnFallButtonClickEvent>(OnFallButtonClick);
-            eventBus.Subscribe<OnWinterButtonClickEvent>(OnWinterButtonClick);
+            _eventBus = MainContainer.instance.Resolve<EventBus>();
+            _eventBus.Subscribe<OnSpringButtonClickEvent>(OnSpringButtonClick);
+            _eventBus.Subscribe<OnSummerButtonClickEvent>(OnSummerButtonClick);
+            _eventBus.Subscribe<OnFallButtonClickEvent>(OnFallButtonClick);
+            _eventBus.Subscribe<OnWinterButtonClickEvent>(OnWinterButtonClick);
             if (initialHex != null)
             {
                 Vector3 initialPosition = initialHex.transform.position;
                 Vector2Int initialCoordinates = HexGrid.Instance.WorldToAxial(new Vector2(initialPosition.x, initialPosition.y));
-                takenHexes.Add(initialCoordinates);
+                _takenHexes.Add(initialCoordinates);
 
                 ShowPlaceholdersForAllHexes(HexGrid.Instance);
 
@@ -49,28 +49,28 @@ namespace Code
 
         private void OnFallButtonClick(OnFallButtonClickEvent obj)
         {
-            currentEventType = EventType.Fall;
+            _currentEventType = EventType.Fall;
         }
         
         private void OnWinterButtonClick(OnWinterButtonClickEvent obj)
         {
-            currentEventType = EventType.Winter;
+            _currentEventType = EventType.Winter;
         }
 
         private void OnSummerButtonClick(OnSummerButtonClickEvent obj)
         {
-            currentEventType = EventType.Summer;
+            _currentEventType = EventType.Summer;
         }
 
         private void OnSpringButtonClick(OnSpringButtonClickEvent obj)
         {
-            currentEventType = EventType.Spring;
+            _currentEventType = EventType.Spring;
         }
 
         public void InstantiateHex(Vector2Int hexCoordinates, Vector3 worldPosition, EventType eventType = EventType.None)
         {
             // Check if the hex is already taken
-            if (takenHexes.Contains(hexCoordinates))
+            if (_takenHexes.Contains(hexCoordinates))
             {
                 Debug.LogWarning($"Hex at {hexCoordinates} is already taken.");
                 return;
@@ -97,10 +97,9 @@ namespace Code
             }
             var hexPrefab = hexPrefabs[UnityEngine.Random.Range(0, hexPrefabs.Count)];
             GameObject newHex = Instantiate(hexPrefab, worldPosition, Quaternion.identity, hexParent);
-            takenHexes.Add(hexCoordinates);
-            lastPlacedHex = newHex;
-
-            Debug.Log($"Hex instantiated at {hexCoordinates}.");
+            _takenHexes.Add(hexCoordinates);
+            LastPlacedHex = newHex;
+            //Debug.Log($"Hex instantiated at {hexCoordinates}.");
         }
 
         public void ShowPlaceholdersForAllHexes(HexGrid hexGrid)
@@ -109,7 +108,7 @@ namespace Code
             ClearPlaceholders();
 
             // Show placeholders for all existing hexes
-            foreach (var hex in takenHexes)
+            foreach (var hex in _takenHexes)
             {
                 ShowPlaceholders(hex, hexGrid);
             }
@@ -118,7 +117,7 @@ namespace Code
         public void ShowPlaceholders(Vector2Int hexCoordinates, HexGrid hexGrid)
         {
             // Get available neighbors from HexGrid
-            List<Vector2Int> availableNeighbors = hexGrid.GetAvailableNeighbors(hexCoordinates, takenHexes);
+            List<Vector2Int> availableNeighbors = hexGrid.GetAvailableNeighbors(hexCoordinates, _takenHexes);
 
             foreach (var neighbor in availableNeighbors)
             {
@@ -131,14 +130,14 @@ namespace Code
                 // Assign the neighbor coordinates to the placeholder for later use
                 placeholder.GetComponent<HexPlaceholder>().Initialize(neighbor);
 
-                activePlaceholders.Add(placeholder);
+                _activePlaceholders.Add(placeholder);
             }
         }
 
         public void PlaceHexFromPlaceholder(Vector2Int hexCoordinates, Vector3 worldPosition)
         {
             // Instantiate the hex at the placeholder's position
-            InstantiateHex(hexCoordinates, worldPosition,currentEventType);
+            InstantiateHex(hexCoordinates, worldPosition,_currentEventType);
 
             // Clear placeholders after placement
             ClearPlaceholders();
@@ -150,12 +149,12 @@ namespace Code
         private void ClearPlaceholders()
         {
             // Destroy all active placeholders
-            foreach (var placeholder in activePlaceholders)
+            foreach (var placeholder in _activePlaceholders)
             {
                 Destroy(placeholder);
             }
 
-            activePlaceholders.Clear();
+            _activePlaceholders.Clear();
         }
     }
 }

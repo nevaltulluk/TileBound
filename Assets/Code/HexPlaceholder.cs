@@ -4,18 +4,18 @@ namespace Code
 {
     public class HexPlaceholder : MonoBehaviour
     {
-        private Vector2Int hexCoordinates;
-        HexManager hexManager;
+        private Vector2Int _hexCoordinates;
+        HexManager _hexManager;
 
         public void Initialize(Vector2Int coordinates)
         {
-            hexManager = MainContainer.Instance.Resolve<HexManager>();
-            hexCoordinates = coordinates;
+            _hexManager = MainContainer.instance.Resolve<HexManager>();
+            _hexCoordinates = coordinates;
         }
 
         public void OnClick()
         {
-            hexManager.PlaceHexFromPlaceholder(hexCoordinates, transform.position);
+            _hexManager.PlaceHexFromPlaceholder(_hexCoordinates, transform.position);
         }
     }
 }
