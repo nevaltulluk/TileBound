@@ -5,11 +5,13 @@ using UnityEngine;
 
 namespace Code
 {
-    public class HexManager : MonoBehaviour
+    public class HexManager : MonoBehaviour, IService
     {
-        public static HexManager Instance { get; private set; } // Singleton instance
-
-        public List<GameObject> hexPrefabs; // Prefab for the hex tile
+        public List<GameObject> fallPrefabs; // Prefab for the hex tile
+        public List<GameObject> springPrefabs; // Prefab for the hex tile
+        public List<GameObject> summerPrefabs; // Prefab for the hex tile
+        public List<GameObject> winterPrefabs; // Prefab for the hex tile
+        public List<GameObject> basicHexPrefabs; // Prefab for the hex tile
         public GameObject placeholderPrefab; // Prefab for the placeholder tile
         public Transform hexParent; // Parent object for hexes
         public Transform placeholderParent; // Parent object for placeholders
@@ -19,19 +21,20 @@ namespace Code
         private HashSet<Vector2Int> takenHexes = new HashSet<Vector2Int>(); // Tracks all taken hexes
         private List<GameObject> activePlaceholders = new List<GameObject>(); // Tracks active placeholders
         [NonSerialized]public GameObject lastPlacedHex;
+        private EventBus eventBus;
+        private EventType currentEventType = EventType.None;
         private void Awake()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
+            MainContainer.Instance.Register(this);
         }
 
         private void Start()
         {
+            eventBus = MainContainer.Instance.Resolve<EventBus>();
+            eventBus.Subscribe<OnSpringButtonClickEvent>(OnSpringButtonClick);
+            eventBus.Subscribe<OnSummerButtonClickEvent>(OnSummerButtonClick);
+            eventBus.Subscribe<OnFallButtonClickEvent>(OnFallButtonClick);
+            eventBus.Subscribe<OnWinterButtonClickEvent>(OnWinterButtonClick);
             if (initialHex != null)
             {
                 Vector3 initialPosition = initialHex.transform.position;
@@ -44,7 +47,27 @@ namespace Code
             }
         }
 
-        public void InstantiateHex(Vector2Int hexCoordinates, Vector3 worldPosition)
+        private void OnFallButtonClick(OnFallButtonClickEvent obj)
+        {
+            currentEventType = EventType.Fall;
+        }
+        
+        private void OnWinterButtonClick(OnWinterButtonClickEvent obj)
+        {
+            currentEventType = EventType.Winter;
+        }
+
+        private void OnSummerButtonClick(OnSummerButtonClickEvent obj)
+        {
+            currentEventType = EventType.Summer;
+        }
+
+        private void OnSpringButtonClick(OnSpringButtonClickEvent obj)
+        {
+            currentEventType = EventType.Spring;
+        }
+
+        public void InstantiateHex(Vector2Int hexCoordinates, Vector3 worldPosition, EventType eventType = EventType.None)
         {
             // Check if the hex is already taken
             if (takenHexes.Contains(hexCoordinates))
@@ -53,7 +76,25 @@ namespace Code
                 return;
             }
 
-            // Instantiate the hex at the given position
+            var hexPrefabs = basicHexPrefabs;
+            switch (eventType)
+            {
+                case EventType.Spring:
+                    hexPrefabs = springPrefabs;
+                    break;
+                case EventType.Summer:
+                    hexPrefabs = summerPrefabs;
+                    break;
+                case EventType.Fall:
+                    hexPrefabs = fallPrefabs;
+                    break;
+                case EventType.Winter:
+                    hexPrefabs = winterPrefabs;
+                    break;
+                default:
+                    hexPrefabs = basicHexPrefabs;
+                    break;
+            }
             var hexPrefab = hexPrefabs[UnityEngine.Random.Range(0, hexPrefabs.Count)];
             GameObject newHex = Instantiate(hexPrefab, worldPosition, Quaternion.identity, hexParent);
             takenHexes.Add(hexCoordinates);
@@ -97,7 +138,7 @@ namespace Code
         public void PlaceHexFromPlaceholder(Vector2Int hexCoordinates, Vector3 worldPosition)
         {
             // Instantiate the hex at the placeholder's position
-            InstantiateHex(hexCoordinates, worldPosition);
+            InstantiateHex(hexCoordinates, worldPosition,currentEventType);
 
             // Clear placeholders after placement
             ClearPlaceholders();

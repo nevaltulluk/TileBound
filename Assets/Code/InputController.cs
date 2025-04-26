@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Code
@@ -12,7 +13,13 @@ namespace Code
         private float clickThreshold = 0.2f; // Maximum movement threshold for a click
         private float maxClickDuration = 0.3f; // Maximum time duration for a click
         private float clickStartTime;
-        
+        private HexManager hexManager;
+
+        private void Start()
+        {
+            hexManager = MainContainer.Instance.Resolve<HexManager>();
+        }
+
         private void Update()
         {
             HandleMouseInput();
@@ -38,16 +45,16 @@ namespace Code
                 }
             }
 
-            if (HexManager.Instance != null && HexManager.Instance.lastPlacedHex != null)
+            if (hexManager != null && hexManager.lastPlacedHex != null)
             {
                 if (Input.GetMouseButtonDown(1))
                 {
-                    HexManager.Instance.lastPlacedHex.transform.Rotate(0, 60, 0); // Rotate clockwise
+                    hexManager.lastPlacedHex.transform.Rotate(0, 60, 0); // Rotate clockwise
                 }
 
                 if (Input.GetMouseButtonDown(2))
                 {
-                    HexManager.Instance.lastPlacedHex.transform.Rotate(0, -60, 0); // Rotate counterclockwise
+                    hexManager.lastPlacedHex.transform.Rotate(0, -60, 0); // Rotate counterclockwise
                 }
             }
         }
