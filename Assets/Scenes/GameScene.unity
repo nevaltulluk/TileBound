@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 9a819b815e161b64e8c78164c1902994, type: 2}
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -1295,7 +1295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9414f73f7b299d40ac65a0ba6f5f6e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  starPrefab: {fileID: 3988511316689207443, guid: 565b12b58f6cad846bbaf321c76740c6, type: 3}
+  starPrefab: {fileID: 2508826838967613762, guid: bd109cc956a57fa43ba5f35d117a6fdf, type: 3}
 --- !u!4 &739463161
 Transform:
   m_ObjectHideFlags: 0
