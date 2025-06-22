@@ -13,5 +13,14 @@ namespace Code
                 this.Position = position;
             }
         }
+
+        public struct TimeOver
+        {
+            
+        }
+        
+        public struct RestartButtonClicked{}
+        public struct StopGameInput{}
+        public struct StartGameInput{}
     }
 }

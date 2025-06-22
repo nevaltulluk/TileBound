@@ -91,7 +91,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6902446957656852533, guid: 395d3753b15e68844b019c8e62ba470c, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8503130475144668843, guid: 395d3753b15e68844b019c8e62ba470c, type: 3}
       propertyPath: m_Name
@@ -165,7 +165,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6902446957656852533, guid: 395d3753b15e68844b019c8e62ba470c, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8503130475144668843, guid: 395d3753b15e68844b019c8e62ba470c, type: 3}
       propertyPath: m_Name
@@ -199,7 +199,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2175095209002586202, guid: a4beabb8d6183f84fbab6eae7bcf74f0, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3812534732292815444, guid: a4beabb8d6183f84fbab6eae7bcf74f0, type: 3}
       propertyPath: m_LocalScale.z
@@ -277,7 +277,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2175095209002586202, guid: a4beabb8d6183f84fbab6eae7bcf74f0, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3812534732292815444, guid: a4beabb8d6183f84fbab6eae7bcf74f0, type: 3}
       propertyPath: m_LocalScale.z
@@ -351,7 +351,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1435686797752965411, guid: 205cd3b9f492d744382e2426c4663da3, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2078818327746960858, guid: 205cd3b9f492d744382e2426c4663da3, type: 3}
       propertyPath: m_LocalScale.z
@@ -429,7 +429,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1435686797752965411, guid: 205cd3b9f492d744382e2426c4663da3, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2078818327746960858, guid: 205cd3b9f492d744382e2426c4663da3, type: 3}
       propertyPath: m_LocalScale.z

@@ -23,6 +23,7 @@ namespace Code
         [NonSerialized]public GameObject LastPlacedHex;
         private EventBus _eventBus;
         private EventType _currentEventType = EventType.None;
+        private List<GameObject> _addedHexes = new List<GameObject>();
         private void Awake()
         {
             MainContainer.instance.Register(this);
@@ -35,6 +36,12 @@ namespace Code
             _eventBus.Subscribe<OnSummerButtonClickEvent>(OnSummerButtonClick);
             _eventBus.Subscribe<OnFallButtonClickEvent>(OnFallButtonClick);
             _eventBus.Subscribe<OnWinterButtonClickEvent>(OnWinterButtonClick);
+            _eventBus.Subscribe<Events.RestartButtonClicked>(OnGameRestart);
+            Initialize();
+        }
+
+        private void Initialize()
+        {
             if (initialHex != null)
             {
                 Vector3 initialPosition = initialHex.transform.position;
@@ -42,9 +49,12 @@ namespace Code
                 _takenHexes.Add(initialCoordinates);
 
                 ShowPlaceholdersForAllHexes(HexGrid.Instance);
-
-                Debug.Log($"Initialized with first hex at {initialCoordinates}.");
             }
+        }
+
+        private void OnGameRestart()
+        {
+            ClearAllHexes();
         }
 
         private void OnFallButtonClick(OnFallButtonClickEvent obj)
@@ -72,7 +82,7 @@ namespace Code
             // Check if the hex is already taken
             if (_takenHexes.Contains(hexCoordinates))
             {
-                Debug.LogWarning($"Hex at {hexCoordinates} is already taken.");
+                //Debug.LogWarning($"Hex at {hexCoordinates} is already taken.");
                 return;
             }
 
@@ -99,7 +109,29 @@ namespace Code
             GameObject newHex = Instantiate(hexPrefab, worldPosition, Quaternion.identity, hexParent);
             _takenHexes.Add(hexCoordinates);
             LastPlacedHex = newHex;
-            //Debug.Log($"Hex instantiated at {hexCoordinates}.");
+            _addedHexes.Add(newHex);
+            Debug.Log($"Hex instantiated at {hexCoordinates}.");
+        }
+
+        private void ClearAllHexes()
+        {
+            _takenHexes.Clear();
+            for (var i = _activePlaceholders.Count - 1; i >= 0; i--)
+            {
+                var activePlaceholder = _activePlaceholders[i];
+                Destroy(activePlaceholder);
+            }
+            
+            for (var i = _addedHexes.Count - 1; i >= 0; i--)
+            {
+                var addedHex = _addedHexes[i];
+                Debug.Log("DELETE HEX IN COOR: " + HexGrid.Instance.WorldToAxial(addedHex.transform.position));
+                Destroy(addedHex);
+            }
+
+            _activePlaceholders.Clear();
+            _addedHexes.Clear();
+            Initialize();
         }
 
         public void ShowPlaceholdersForAllHexes(HexGrid hexGrid)

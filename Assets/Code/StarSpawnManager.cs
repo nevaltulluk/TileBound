@@ -1,3 +1,4 @@
+using System.Collections;
 using Code;
 using UnityEngine;
 
@@ -15,6 +16,13 @@ public class StarSpawnManager : MonoBehaviour
 
     private void OnSpawnStar(Events.SpawnStar obj)
     {
-        Instantiate(starPrefab, obj.Position + Vector3.up, Quaternion.identity, transform);
+        var star = Instantiate(starPrefab, obj.Position + Vector3.up, Quaternion.identity, transform);
+        StartCoroutine(DestroyStar(star));
+    }
+
+    private IEnumerator DestroyStar(GameObject star)
+    {
+        yield return new WaitForSeconds(1);
+        Destroy(star);
     }
 }

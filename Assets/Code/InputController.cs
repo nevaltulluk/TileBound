@@ -14,14 +14,28 @@ namespace Code
         private float _maxClickDuration = 0.3f; // Maximum time duration for a click
         private float _clickStartTime;
         private HexManager _hexManager;
+        private EventBus _eventBus;
+        private Vector3 _initialCameraPosition;
+        private bool isListeningInput = true;
 
         private void Start()
         {
             _hexManager = MainContainer.instance.Resolve<HexManager>();
+            _eventBus = MainContainer.instance.Resolve<EventBus>();
+            _eventBus.Subscribe<Events.RestartButtonClicked>(OnGameRestart);
+            _eventBus.Subscribe<Events.StopGameInput>(() => isListeningInput = false);
+            _eventBus.Subscribe<Events.StartGameInput>(() => isListeningInput = true);
+            _initialCameraPosition = cameraTransform.position;
+        }
+
+        private void OnGameRestart()
+        {
+            cameraTransform.position = _initialCameraPosition;
         }
 
         private void Update()
         {
+            if (!isListeningInput) return;
             HandleMouseInput();
             HandleCameraMovement();
         }
