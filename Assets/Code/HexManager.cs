@@ -27,17 +27,19 @@ namespace Code
         private void Awake()
         {
             MainContainer.instance.Register(this);
-        }
-
-        private void Start()
-        {
+            
             _eventBus = MainContainer.instance.Resolve<EventBus>();
             _eventBus.Subscribe<OnSpringButtonClickEvent>(OnSpringButtonClick);
             _eventBus.Subscribe<OnSummerButtonClickEvent>(OnSummerButtonClick);
             _eventBus.Subscribe<OnFallButtonClickEvent>(OnFallButtonClick);
             _eventBus.Subscribe<OnWinterButtonClickEvent>(OnWinterButtonClick);
             _eventBus.Subscribe<Events.RestartButtonClicked>(OnGameRestart);
+        }
+
+        private void Start()
+        {
             Initialize();
+            _eventBus.Fire(new Events.OnGameStarted());
         }
 
         private void Initialize()
