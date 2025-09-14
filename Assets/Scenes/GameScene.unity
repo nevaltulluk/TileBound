@@ -1398,6 +1398,7 @@ MonoBehaviour:
   - {fileID: 3904353579597588253, guid: 2f625586cff414c469a173008050b1fd, type: 3}
   basicHexPrefabs:
   - {fileID: 7314777444520067363, guid: 324435af3c9f5874989f3f2f13f2f85f, type: 3}
+  - {fileID: 919132149155446097, guid: aea536beb9b4b41b8a067a8d92f6f172, type: 3}
   placeholderPrefab: {fileID: 6478782596427824668, guid: c87b1b3b3edb9e24286d8e7601c7bef8, type: 3}
   hexParent: {fileID: 2052213633}
   placeholderParent: {fileID: 881601624}
@@ -2730,7 +2731,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4e16051a1b41c42bceb8170e07121a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerText: {fileID: 0}
 --- !u!224 &3955430593164980519 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8526901514663199467, guid: 1d4bac4e7f73c05429651b899f5c8cd0, type: 3}
