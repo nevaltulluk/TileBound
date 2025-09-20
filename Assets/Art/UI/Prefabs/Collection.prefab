@@ -13073,7 +13073,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Collection
+  m_text: Koleksiyon
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c8a84c79dcae44b4391fb210dd228bf9, type: 2}
   m_sharedMaterial: {fileID: -5544050357712049260, guid: c8a84c79dcae44b4391fb210dd228bf9, type: 2}
@@ -13110,7 +13110,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: -6.52
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -13971,7 +13971,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Collection
+  m_text: Koleksiyon
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 60064e280a036465e8ac723c4371d1ce, type: 2}
   m_sharedMaterial: {fileID: -5544050357712049260, guid: 60064e280a036465e8ac723c4371d1ce, type: 2}
@@ -14008,7 +14008,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: -6.52
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
