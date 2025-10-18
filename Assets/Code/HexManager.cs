@@ -23,7 +23,7 @@ namespace Code
         private EventBus _eventBus;
         private EventType _currentEventType = EventType.None;
         private List<GameObject> _addedHexes = new List<GameObject>();
-        
+        private int _currentLevel = 0;
         private DataManager _dataManager;
         private void Awake()
         {
@@ -38,6 +38,36 @@ namespace Code
             _eventBus.Subscribe<OnFallButtonClickEvent>(OnFallButtonClick);
             _eventBus.Subscribe<OnWinterButtonClickEvent>(OnWinterButtonClick);
             _eventBus.Subscribe<Events.RestartButtonClicked>(OnGameRestart);
+            _eventBus.Subscribe<Events.RequestNextLevel>(OnRequestNextLevel);
+        }
+
+        private void OnRequestNextLevel(Events.RequestNextLevel obj)
+        {
+            StartLevel(_currentLevel + 1);
+        }
+        
+        private void StartLevel(int level)
+        {
+            _currentLevel = level;
+            SetEventTypeForLevel(_currentLevel);
+            ClearAllHexes();
+            
+            Debug.Log($"Starting Level {_currentLevel} with theme {_currentEventType}");
+            _eventBus.Fire(new Events.OnLevelStarted { Level = _currentLevel });
+            _eventBus.Fire(new Events.OnGameStarted());
+        }
+        
+        private void SetEventTypeForLevel(int level)
+        {
+            int themeIndex = level % 5; // Will result in 0, 1, 2, 3, or 4
+            switch (themeIndex)
+            {
+                case 0: _currentEventType = EventType.None; break;
+                case 1: _currentEventType = EventType.Spring; break;
+                case 2: _currentEventType = EventType.Summer; break;
+                case 3: _currentEventType = EventType.Fall; break;
+                case 4: _currentEventType = EventType.Winter; break;
+            }
         }
 
         private void Start()
@@ -63,14 +93,13 @@ namespace Code
                 Vector3 initialPosition = initialHex.transform.position;
                 Vector2Int initialCoordinates = HexGrid.Instance.WorldToAxial(new Vector2(initialPosition.x, initialPosition.y));
                 _takenHexes.Add(initialCoordinates);
-
                 ShowPlaceholdersForAllHexes(HexGrid.Instance);
             }
         }
 
         private void OnGameRestart()
         {
-            ClearAllHexes();
+            StartLevel(_currentLevel);
         }
 
         private void OnFallButtonClick(OnFallButtonClickEvent obj)
@@ -148,6 +177,7 @@ namespace Code
         public void SaveData(ref GameData gameData)
         {
             gameData.placedHexes.Clear();
+            gameData.currentLevel = _currentLevel;
             foreach (var hexObject in _addedHexes)
             {
                 var hexInfo = hexObject.GetComponent<HexInfo>();
@@ -166,17 +196,20 @@ namespace Code
 
         public void LoadData(GameData gameData)
         {
-            // 1. Manually clear the board without re-initializing
+            // Load level and set theme BEFORE loading hexes
+            _currentLevel = gameData.currentLevel;
+            SetEventTypeForLevel(_currentLevel);
+
+            // Clear the board
             _takenHexes.Clear();
             ClearPlaceholders();
-            
             for (var i = _addedHexes.Count - 1; i >= 0; i--)
             {
                 Destroy(_addedHexes[i]);
             }
             _addedHexes.Clear();
 
-            // 2. Re-add the initial scene hex to the tracking set
+            // Add the initial hex
             if (initialHex != null)
             {
                 Vector3 initialPosition = initialHex.transform.position;
@@ -184,7 +217,7 @@ namespace Code
                 _takenHexes.Add(initialCoordinates);
             }
 
-            // 3. Load the saved hexes from GameData
+            // Load saved hexes from GameData
             foreach (var hexData in gameData.placedHexes)
             {
                 Vector2Int coordinates = new Vector2Int(hexData.q, hexData.r);
@@ -192,8 +225,10 @@ namespace Code
                 InstantiateHex(coordinates, worldPosition, hexData.eventType, hexData.prefabIndex);
             }
 
-            // 4. Update the placeholders for the newly loaded grid
             ShowPlaceholdersForAllHexes(HexGrid.Instance);
+            
+            // Fire event to notify UI etc. that the level is loaded
+            _eventBus.Fire(new Events.OnLevelStarted { Level = _currentLevel });
         }
 
         private void ClearAllHexes()
