@@ -17,7 +17,7 @@ public class HexTrigger : MonoBehaviour
     {
         if (!other.CompareTag("TileTrigger")) return;
         if (!isSpawnStar) return;
-        if (other.GetComponent<HexTrigger>().tileType == tileType)
+        if (other.GetComponent<HexTrigger>().tileType == tileType &&  _eventBus != null)
         {
             _eventBus.Fire(new Events.SpawnStar(other.gameObject.transform.position));
             Debug.Log("Spawn Star --- " + tileType);

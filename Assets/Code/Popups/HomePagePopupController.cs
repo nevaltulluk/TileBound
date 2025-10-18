@@ -1,4 +1,3 @@
-using UnityEditor.TestTools.CodeCoverage;
 using UnityEngine;
 using UnityEngine.UI;
 using Events = Code.Events;
