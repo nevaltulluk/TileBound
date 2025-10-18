@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using Code;
 using TMPro;
 using UnityEngine;
@@ -28,6 +26,7 @@ public class GameManager : MonoBehaviour, IPersistable
         LoadData(dataManager.GetData());
         SetBgColor();
         _isGameOver = true;
+        _eventBus.Fire(new Events.OnGameFirstOpen());
     }
 
     private void OnLevelStarted(Events.OnLevelStarted obj)

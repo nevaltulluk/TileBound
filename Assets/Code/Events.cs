@@ -23,6 +23,7 @@ namespace Code
         public struct StopGameInput{}
         public struct StartGameInput{}
         public struct OnGameStarted{}
+        public struct OnGameFirstOpen{}
         public struct GameStartButtonClicked{}
 
         public struct OnStarCountChanged

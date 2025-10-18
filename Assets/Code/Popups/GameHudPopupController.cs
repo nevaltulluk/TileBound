@@ -36,7 +36,6 @@ public class GameHudPopupController : MonoBehaviour
 
     private void OnGameStartButtonClicked(Events.GameStartButtonClicked obj)
     {
-        
         gameHud.SetActive(true);
     }
 
