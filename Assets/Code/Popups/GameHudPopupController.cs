@@ -12,9 +12,18 @@ public class GameHudPopupController : MonoBehaviour
     void Start()
     {
         _eventBus = MainContainer.instance.Resolve<EventBus>();
+        var dataManager = MainContainer.instance.Resolve<DataManager>();
         _eventBus.Subscribe<Events.OnGameStarted>(OnGameStarted);
         _eventBus.Subscribe<Events.GameStartButtonClicked>(OnGameStartButtonClicked);
         _eventBus.Subscribe<Events.OnStarCountChanged>(OnStarCountChanged);
+        LoadData(dataManager.GetData());
+        
+    }
+
+    private void LoadData(GameData data)
+    {
+        starPercentage.fillAmount = data.currentStars / 10;
+        starText.text = data.totalStars.ToString();
     }
 
     private void OnStarCountChanged(Events.OnStarCountChanged obj)
