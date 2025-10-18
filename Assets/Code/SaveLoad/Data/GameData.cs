@@ -10,6 +10,7 @@ public class GameData
     public float currentStars;
     public float currentCoin;
     public List<HexData> placedHexes = new List<HexData>();
+    public int currentLevel;
 
     public GameData()
     {
@@ -17,12 +18,14 @@ public class GameData
         currentStars = 0;
         currentCoin = 0;
         placedHexes = new List<HexData>();
+        currentLevel = 0;
     }
     public void Clear()
     {
         remainingTime = 0;
         currentStars = 0;
         currentCoin = 0;
+        currentLevel = 0;
         placedHexes.Clear();
     }
 }

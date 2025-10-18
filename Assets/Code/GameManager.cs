@@ -23,10 +23,17 @@ public class GameManager : MonoBehaviour, IPersistable
         _eventBus.Subscribe<Events.RestartButtonClicked>(OnGameRestart);
         _eventBus.Subscribe<Events.GameStartButtonClicked>(OnGameStarted);
         _eventBus.Subscribe<Events.SpawnStar>(OnSpawnStar);
+        _eventBus.Subscribe<Events.OnLevelStarted>(OnLevelStarted);
         dataManager.AddToPersistable(this);
         LoadData(dataManager.GetData());
         SetBgColor();
         _isGameOver = true;
+    }
+
+    private void OnLevelStarted(Events.OnLevelStarted obj)
+    {
+        _currentStars = 0;
+        _eventBus.Fire(new Events.OnStarCountChanged(_currentStars));
     }
 
     private void OnSpawnStar(Events.SpawnStar obj)

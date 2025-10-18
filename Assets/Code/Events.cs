@@ -34,5 +34,19 @@ namespace Code
                 this.CurrentStars = currentStars;
             }
         }
+        
+        public struct LevelSuccess {}
+        public struct LevelFail {}
+        public struct RequestNextLevel {}
+        
+        public struct OnLevelStarted
+        {
+            public int Level;
+
+            public OnLevelStarted(int level)
+            {
+                this.Level = level;
+            }
+        }
     }
 }
