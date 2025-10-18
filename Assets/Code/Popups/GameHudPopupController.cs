@@ -9,6 +9,7 @@ public class GameHudPopupController : MonoBehaviour
     [SerializeField]private GameObject gameHud;
     [SerializeField]private Image starPercentage;
     [SerializeField]private TextMeshProUGUI starText;
+    [SerializeField]private TextMeshProUGUI starTextShadow;
     void Start()
     {
         _eventBus = MainContainer.instance.Resolve<EventBus>();
@@ -23,12 +24,13 @@ public class GameHudPopupController : MonoBehaviour
     private void LoadData(GameData data)
     {
         starPercentage.fillAmount = data.currentStars / 10;
-        starText.text = data.totalStars.ToString();
+        starText.text = data.currentStars.ToString();
     }
 
     private void OnStarCountChanged(Events.OnStarCountChanged obj)
     {
-        starText.text = obj.TotalStars.ToString();
+        starText.text = obj.CurrentStars.ToString();
+        starTextShadow.text = obj.CurrentStars.ToString();
         starPercentage.fillAmount = obj.CurrentStars / 10;
     }
 

@@ -27,12 +27,10 @@ namespace Code
 
         public struct OnStarCountChanged
         {
-            public readonly float TotalStars;
             public readonly float CurrentStars;
 
-            public OnStarCountChanged(float totalStars, float currentStars)
+            public OnStarCountChanged( float currentStars)
             {
-                this.TotalStars = totalStars;
                 this.CurrentStars = currentStars;
             }
         }

@@ -14,7 +14,6 @@ public class GameManager : MonoBehaviour, IPersistable
     private float _remainingTime;
     private bool _isGameOver;
     private EventBus _eventBus;
-    private float _totalStars;
     private float _currentStars;
 
     private void Start()
@@ -32,9 +31,8 @@ public class GameManager : MonoBehaviour, IPersistable
 
     private void OnSpawnStar(Events.SpawnStar obj)
     {
-        _totalStars++;
         _currentStars++;
-        _eventBus.Fire(new Events.OnStarCountChanged(_totalStars, _currentStars));
+        _eventBus.Fire(new Events.OnStarCountChanged(_currentStars));
     }
 
     private void OnGameStarted(Events.GameStartButtonClicked obj)
@@ -48,7 +46,7 @@ public class GameManager : MonoBehaviour, IPersistable
         _isGameOver = false;
         _seaRenderer.material.color = _startingColor;
         _currentStars = 0;
-        _eventBus.Fire(new Events.OnStarCountChanged(_totalStars, _currentStars));
+        _eventBus.Fire(new Events.OnStarCountChanged( _currentStars));
     }
 
     private void Update()
@@ -87,14 +85,12 @@ public class GameManager : MonoBehaviour, IPersistable
     {
         gameData.remainingTime = _remainingTime;
         gameData.currentStars = _currentStars;
-        gameData.totalStars = _totalStars;
     }
 
     public void LoadData(GameData gameData)
     {
         _remainingTime = gameData.remainingTime;
         _currentStars = gameData.currentStars;
-        _totalStars = gameData.totalStars;
         if (_remainingTime == 0)
         {
             _remainingTime = Constants.TotalTime;

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -55,8 +54,17 @@ public class DataManager : MonoBehaviour , IService
         return _gameData;
     }
 
-    private void OnDestroy()
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            SaveGame();
+        }
+    }
+    
+    private void OnApplicationQuit()
     {
         SaveGame();
     }
+    
 }
