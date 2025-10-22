@@ -8,4 +8,14 @@
         Fall,
         Winter,
     }
+    
+    [System.Serializable]
+    public class HexData
+    {
+        public int q;
+        public int r;
+        public EventType eventType;
+        public int prefabIndex;
+    }
+    
 }

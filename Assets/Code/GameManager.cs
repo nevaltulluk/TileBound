@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using Code;
 using TMPro;
 using UnityEngine;
@@ -14,7 +12,6 @@ public class GameManager : MonoBehaviour, IPersistable
     private float _remainingTime;
     private bool _isGameOver;
     private EventBus _eventBus;
-    private float _totalStars;
     private float _currentStars;
 
     private void Start()
@@ -24,17 +21,24 @@ public class GameManager : MonoBehaviour, IPersistable
         _eventBus.Subscribe<Events.RestartButtonClicked>(OnGameRestart);
         _eventBus.Subscribe<Events.GameStartButtonClicked>(OnGameStarted);
         _eventBus.Subscribe<Events.SpawnStar>(OnSpawnStar);
+        _eventBus.Subscribe<Events.OnLevelStarted>(OnLevelStarted);
         dataManager.AddToPersistable(this);
         LoadData(dataManager.GetData());
         SetBgColor();
         _isGameOver = true;
+        _eventBus.Fire(new Events.OnGameFirstOpen());
+    }
+
+    private void OnLevelStarted(Events.OnLevelStarted obj)
+    {
+        _currentStars = 0;
+        _eventBus.Fire(new Events.OnStarCountChanged(_currentStars));
     }
 
     private void OnSpawnStar(Events.SpawnStar obj)
     {
-        _totalStars++;
         _currentStars++;
-        _eventBus.Fire(new Events.OnStarCountChanged(_totalStars, _currentStars));
+        _eventBus.Fire(new Events.OnStarCountChanged(_currentStars));
     }
 
     private void OnGameStarted(Events.GameStartButtonClicked obj)
@@ -48,7 +52,7 @@ public class GameManager : MonoBehaviour, IPersistable
         _isGameOver = false;
         _seaRenderer.material.color = _startingColor;
         _currentStars = 0;
-        _eventBus.Fire(new Events.OnStarCountChanged(_totalStars, _currentStars));
+        _eventBus.Fire(new Events.OnStarCountChanged( _currentStars));
     }
 
     private void Update()
@@ -87,14 +91,12 @@ public class GameManager : MonoBehaviour, IPersistable
     {
         gameData.remainingTime = _remainingTime;
         gameData.currentStars = _currentStars;
-        gameData.totalStars = _totalStars;
     }
 
     public void LoadData(GameData gameData)
     {
         _remainingTime = gameData.remainingTime;
         _currentStars = gameData.currentStars;
-        _totalStars = gameData.totalStars;
         if (_remainingTime == 0)
         {
             _remainingTime = Constants.TotalTime;

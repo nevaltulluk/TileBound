@@ -1,3 +1,5 @@
+using Code;
+
 public class MainContainer : Container
 {
     public static MainContainer instance;
@@ -7,5 +9,6 @@ public class MainContainer : Container
         base.Awake();
         instance = this;
         Register(new EventBus());
+        Register(new LevelManager());
     }
 }

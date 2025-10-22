@@ -1,4 +1,4 @@
-using UnityEditor.TestTools.CodeCoverage;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Events = Code.Events;
@@ -8,25 +8,36 @@ public class HomePagePopupController : MonoBehaviour
     private EventBus _eventBus;
     
     [SerializeField] private Button _startGameButton;
+    [SerializeField] private GameObject hud;
+    [SerializeField] private TextMeshProUGUI starText;
+    [SerializeField] private TextMeshProUGUI starShadow;
+    [SerializeField] private TextMeshProUGUI goldText;
+    [SerializeField] private TextMeshProUGUI goldShadow;
     
     void Start()
     {
         _eventBus = MainContainer.instance.Resolve<EventBus>();
-        _eventBus.Subscribe<Events.OnGameStarted>(OnGameStarted);
-        
+        _eventBus.Subscribe<Events.OnStarCountChanged>(OnStarCountChanged);
+        _eventBus.Subscribe<Events.OnGameFirstOpen>(OnGameFirstOpen);
         _startGameButton.onClick.AddListener(OnStartGameClicked);
+    }
+
+    private void OnGameFirstOpen(Events.OnGameFirstOpen obj)
+    {
+        hud.SetActive(true);
+        _eventBus.Fire(new Events.StopGameInput());
+    }
+
+    private void OnStarCountChanged(Events.OnStarCountChanged obj)
+    {
+        starText.text = obj.CurrentStars.ToString();
+        starShadow.text = obj.CurrentStars.ToString();
     }
 
     private void OnStartGameClicked()
     {
         _eventBus.Fire(new Events.GameStartButtonClicked());
-        gameObject.SetActive(false);
+        _eventBus.Fire(new Events.StartGameInput());
+        hud.SetActive(false);
     }
-
-    private void OnGameStarted(Events.OnGameStarted obj)
-    {
-        gameObject.SetActive(true);
-    }
-
-    
 }

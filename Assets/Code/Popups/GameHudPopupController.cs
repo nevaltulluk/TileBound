@@ -9,23 +9,33 @@ public class GameHudPopupController : MonoBehaviour
     [SerializeField]private GameObject gameHud;
     [SerializeField]private Image starPercentage;
     [SerializeField]private TextMeshProUGUI starText;
+    [SerializeField]private TextMeshProUGUI starTextShadow;
     void Start()
     {
         _eventBus = MainContainer.instance.Resolve<EventBus>();
+        var dataManager = MainContainer.instance.Resolve<DataManager>();
         _eventBus.Subscribe<Events.OnGameStarted>(OnGameStarted);
         _eventBus.Subscribe<Events.GameStartButtonClicked>(OnGameStartButtonClicked);
         _eventBus.Subscribe<Events.OnStarCountChanged>(OnStarCountChanged);
+        LoadData(dataManager.GetData());
+        
+    }
+
+    private void LoadData(GameData data)
+    {
+        starPercentage.fillAmount = data.currentStars / 10;
+        starText.text = data.currentStars.ToString();
     }
 
     private void OnStarCountChanged(Events.OnStarCountChanged obj)
     {
-        starText.text = obj.TotalStars.ToString();
+        starText.text = obj.CurrentStars.ToString();
+        starTextShadow.text = obj.CurrentStars.ToString();
         starPercentage.fillAmount = obj.CurrentStars / 10;
     }
 
     private void OnGameStartButtonClicked(Events.GameStartButtonClicked obj)
     {
-        
         gameHud.SetActive(true);
     }
 

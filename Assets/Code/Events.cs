@@ -23,17 +23,30 @@ namespace Code
         public struct StopGameInput{}
         public struct StartGameInput{}
         public struct OnGameStarted{}
+        public struct OnGameFirstOpen{}
         public struct GameStartButtonClicked{}
 
         public struct OnStarCountChanged
         {
-            public readonly float TotalStars;
             public readonly float CurrentStars;
 
-            public OnStarCountChanged(float totalStars, float currentStars)
+            public OnStarCountChanged( float currentStars)
             {
-                this.TotalStars = totalStars;
                 this.CurrentStars = currentStars;
+            }
+        }
+        
+        public struct LevelSuccess {}
+        public struct LevelFail {}
+        public struct RequestNextLevel {}
+        
+        public struct OnLevelStarted
+        {
+            public int Level;
+
+            public OnLevelStarted(int level)
+            {
+                this.Level = level;
             }
         }
     }
