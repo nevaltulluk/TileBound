@@ -12,6 +12,7 @@ public class GameHudPopupController : MonoBehaviour
     [SerializeField]private TextMeshProUGUI starTextShadow;
     void Start()
     {
+        Camera.main.depthTextureMode |= DepthTextureMode.Depth;
         _eventBus = MainContainer.instance.Resolve<EventBus>();
         var dataManager = MainContainer.instance.Resolve<DataManager>();
         _eventBus.Subscribe<Events.OnGameStarted>(OnGameStarted);

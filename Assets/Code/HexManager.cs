@@ -25,6 +25,14 @@ namespace Code
         private List<GameObject> _addedHexes = new List<GameObject>();
         private int _currentLevel = 0;
         private DataManager _dataManager;
+        
+        [Header("Preview (Next Piece)")]
+        public Transform previewParent;        // assign in Inspector (a clean 3D spot/camera)
+
+        private GameObject _previewInstance;   // spawned under previewParent
+        private EventType _previewEventType;
+        private int _previewPrefabIndex = -1;
+
         private void Awake()
         {
             MainContainer.instance.Register(this);
@@ -33,18 +41,68 @@ namespace Code
             _dataManager.AddToPersistable(this);
             
             _eventBus = MainContainer.instance.Resolve<EventBus>();
-            _eventBus.Subscribe<OnSpringButtonClickEvent>(OnSpringButtonClick);
-            _eventBus.Subscribe<OnSummerButtonClickEvent>(OnSummerButtonClick);
-            _eventBus.Subscribe<OnFallButtonClickEvent>(OnFallButtonClick);
-            _eventBus.Subscribe<OnWinterButtonClickEvent>(OnWinterButtonClick);
             _eventBus.Subscribe<Events.RestartButtonClicked>(OnGameRestart);
             _eventBus.Subscribe<Events.RequestNextLevel>(OnRequestNextLevel);
         }
 
+        
         private void OnRequestNextLevel(Events.RequestNextLevel obj)
         {
             StartLevel(_currentLevel + 1);
         }
+        
+        private List<GameObject> GetPrefabListByEvent(EventType eventType)
+        {
+            switch (eventType)
+            {
+                case EventType.Spring: return springPrefabs;
+                case EventType.Summer: return summerPrefabs;
+                case EventType.Fall:   return fallPrefabs;
+                case EventType.Winter: return winterPrefabs;
+                default:               return basicHexPrefabs;
+            }
+        }
+
+        private void DestroyPreview()
+        {
+            if (_previewInstance != null)
+            {
+                Destroy(_previewInstance);
+                _previewInstance = null;
+            }
+            _previewPrefabIndex = -1;
+        }
+
+        private void GenerateNewPreview()
+        {
+            DestroyPreview();
+
+            _previewEventType = _currentEventType; // preview always reflects current theme
+            var list = GetPrefabListByEvent(_previewEventType);
+            if (list == null || list.Count == 0)
+            {
+                Debug.LogWarning($"No prefabs available for preview: {_previewEventType}");
+                return;
+            }
+
+            _previewPrefabIndex = UnityEngine.Random.Range(0, list.Count);
+            var prefab = list[_previewPrefabIndex];
+
+            if (prefab == null || previewParent == null)
+            {
+                Debug.LogWarning("Preview: missing prefab or previewParent.");
+                return;
+            }
+
+            _previewInstance = Instantiate(prefab, previewParent.position, previewParent.rotation, previewParent);
+            _previewInstance.name = "PREVIEW_" + prefab.name;
+
+            // make it non-interactive
+            foreach (var c in _previewInstance.GetComponentsInChildren<Collider>(true)) c.enabled = false;
+            foreach (var c2 in _previewInstance.GetComponentsInChildren<Collider2D>(true)) c2.enabled = false;
+            foreach (var rb in _previewInstance.GetComponentsInChildren<Rigidbody>(true)) rb.isKinematic = true;
+        }
+
         
         private void UpdateInitialHexVisuals()
         {
@@ -94,7 +152,7 @@ namespace Code
             SetEventTypeForLevel(_currentLevel);
             ClearAllHexes();
             UpdateInitialHexVisuals();
-            
+            GenerateNewPreview();
             Debug.Log($"Starting Level {_currentLevel} with theme {_currentEventType}");
             _eventBus.Fire(new Events.OnLevelStarted { Level = _currentLevel });
         }
@@ -142,26 +200,6 @@ namespace Code
         private void OnGameRestart()
         {
             StartLevel(_currentLevel);
-        }
-
-        private void OnFallButtonClick(OnFallButtonClickEvent obj)
-        {
-            _currentEventType = EventType.Fall;
-        }
-        
-        private void OnWinterButtonClick(OnWinterButtonClickEvent obj)
-        {
-            _currentEventType = EventType.Winter;
-        }
-
-        private void OnSummerButtonClick(OnSummerButtonClickEvent obj)
-        {
-            _currentEventType = EventType.Summer;
-        }
-
-        private void OnSpringButtonClick(OnSpringButtonClickEvent obj)
-        {
-            _currentEventType = EventType.Spring;
         }
 
         public void InstantiateHex(Vector2Int hexCoordinates, Vector3 worldPosition, EventType eventType = EventType.None, int prefabIndex = -1)
@@ -267,7 +305,7 @@ namespace Code
                 Vector3 worldPosition = HexGrid.Instance.AxialToWorld(coordinates.x, coordinates.y);
                 InstantiateHex(coordinates, worldPosition, hexData.eventType, hexData.prefabIndex);
             }
-
+            GenerateNewPreview();
             ShowPlaceholdersForAllHexes(HexGrid.Instance);
             
             // Fire event to notify UI etc. that the level is loaded
@@ -289,10 +327,11 @@ namespace Code
                 Debug.Log("DELETE HEX IN COOR: " + HexGrid.Instance.WorldToAxial(addedHex.transform.position));
                 Destroy(addedHex);
             }
-
+            
             _activePlaceholders.Clear();
             _addedHexes.Clear();
             Initialize();
+            GenerateNewPreview();
         }
 
         public void ShowPlaceholdersForAllHexes(HexGrid hexGrid)
@@ -322,11 +361,19 @@ namespace Code
 
         public void PlaceHexFromPlaceholder(Vector2Int hexCoordinates, Vector3 worldPosition)
         {
-            InstantiateHex(hexCoordinates, worldPosition,_currentEventType);
-            
+            if (_previewPrefabIndex < 0)
+            {
+                InstantiateHex(hexCoordinates, worldPosition, _currentEventType, -1);
+            }
+            else
+            {
+                InstantiateHex(hexCoordinates, worldPosition, _previewEventType, _previewPrefabIndex);
+            }
+
             ClearPlaceholders();
-            
             ShowPlaceholdersForAllHexes(HexGrid.Instance);
+            
+            GenerateNewPreview();
         }
 
         private void ClearPlaceholders()
