@@ -21,11 +21,13 @@ namespace Code.Popups
         private void OnButtonClicked()
         {
             _eventBus.Fire(new Events.RequestNextLevel());
+            _eventBus.Fire(new Events.StartGameInput());
             hud.SetActive(false);
         }
 
         private void OnLevelSuccess(Events.LevelSuccess obj)
         {
+            _eventBus.Fire(new Events.StopGameInput());
             hud.SetActive(true);
         }
         

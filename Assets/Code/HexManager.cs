@@ -46,15 +46,57 @@ namespace Code
             StartLevel(_currentLevel + 1);
         }
         
+        private void UpdateInitialHexVisuals()
+        {
+            if (initialHex == null) return;
+
+            // 1. Determine which list of prefabs to use based on the current event type
+            List<GameObject> prefabList = basicHexPrefabs;
+            switch (_currentEventType)
+            {
+                case EventType.Spring: prefabList = springPrefabs; break;
+                case EventType.Summer: prefabList = summerPrefabs; break;
+                case EventType.Fall:   prefabList = fallPrefabs;   break;
+                case EventType.Winter: prefabList = winterPrefabs; break;
+            }
+
+            // 2. Ensure the list is valid and has at least one prefab
+            if (prefabList == null || prefabList.Count == 0)
+            {
+                Debug.LogWarning($"Prefab list for {_currentEventType} is empty. Cannot update initial hex.");
+                return;
+            }
+
+            // 3. Select the first prefab from the list as the visual source
+            GameObject targetPrefab = prefabList[0];
+
+            // 4. Get the Mesh and Renderer components from both the initial hex and the target prefab
+            MeshFilter initialHexMeshFilter = initialHex.GetComponent<MeshFilter>();
+            MeshRenderer initialHexRenderer = initialHex.GetComponent<MeshRenderer>();
+            MeshFilter prefabMeshFilter = targetPrefab.GetComponent<MeshFilter>();
+            MeshRenderer prefabRenderer = targetPrefab.GetComponent<MeshRenderer>();
+
+            // 5. If all components are present, swap the mesh and materials
+            if (initialHexMeshFilter && initialHexRenderer && prefabMeshFilter && prefabRenderer)
+            {
+                initialHexMeshFilter.sharedMesh = prefabMeshFilter.sharedMesh;
+                initialHexRenderer.sharedMaterials = prefabRenderer.sharedMaterials;
+            }
+            else
+            {
+                Debug.LogError("Could not update initial hex visuals. Missing MeshFilter or MeshRenderer.");
+            }
+        }
+        
         private void StartLevel(int level)
         {
             _currentLevel = level;
             SetEventTypeForLevel(_currentLevel);
             ClearAllHexes();
+            UpdateInitialHexVisuals();
             
             Debug.Log($"Starting Level {_currentLevel} with theme {_currentEventType}");
             _eventBus.Fire(new Events.OnLevelStarted { Level = _currentLevel });
-            _eventBus.Fire(new Events.OnGameStarted());
         }
         
         private void SetEventTypeForLevel(int level)
@@ -203,6 +245,7 @@ namespace Code
             // Clear the board
             _takenHexes.Clear();
             ClearPlaceholders();
+            UpdateInitialHexVisuals();
             for (var i = _addedHexes.Count - 1; i >= 0; i--)
             {
                 Destroy(_addedHexes[i]);

@@ -17,11 +17,17 @@ public class HomePagePopupController : MonoBehaviour
     void Start()
     {
         _eventBus = MainContainer.instance.Resolve<EventBus>();
-        _eventBus.Subscribe<Events.OnGameStarted>(OnGameStarted);
         _eventBus.Subscribe<Events.OnStarCountChanged>(OnStarCountChanged);
+        _eventBus.Subscribe<Events.OnGameFirstOpen>(OnGameFirstOpen);
         _startGameButton.onClick.AddListener(OnStartGameClicked);
     }
-    
+
+    private void OnGameFirstOpen(Events.OnGameFirstOpen obj)
+    {
+        hud.SetActive(true);
+        _eventBus.Fire(new Events.StopGameInput());
+    }
+
     private void OnStarCountChanged(Events.OnStarCountChanged obj)
     {
         starText.text = obj.CurrentStars.ToString();
@@ -31,13 +37,7 @@ public class HomePagePopupController : MonoBehaviour
     private void OnStartGameClicked()
     {
         _eventBus.Fire(new Events.GameStartButtonClicked());
+        _eventBus.Fire(new Events.StartGameInput());
         hud.SetActive(false);
     }
-
-    private void OnGameStarted(Events.OnGameStarted obj)
-    {
-        hud.SetActive(true);
-    }
-
-    
 }
