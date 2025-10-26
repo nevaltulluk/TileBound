@@ -6,4 +6,21 @@
         public static readonly int ChangeShiftTimer = 10;
         public static readonly int RequiredStarCount = 20;
     }
+    
+    public enum SpecialTiles
+    {
+        Mountain,
+        Market,
+        Honeycomb,
+        Fountain,
+        FerrisWheel,
+        WindMill
+    }
+
+    public enum PowerUps
+    {
+        Coin,
+        Time,
+        Magnet
+    }
 }
