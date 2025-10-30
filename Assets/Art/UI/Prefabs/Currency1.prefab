@@ -154,8 +154,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 29.4, y: 19.1}
-  m_SizeDelta: {x: 135.7833, y: 90.13}
+  m_AnchoredPosition: {x: 21.2, y: 13.4}
+  m_SizeDelta: {x: 135.7833, y: 54.5611}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5929340493130684433
 CanvasRenderer:
@@ -212,8 +212,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
-  m_fontSizeBase: 80
+  m_fontSize: 55.4
+  m_fontSizeBase: 55.4
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -290,8 +290,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 18.2, y: 4}
-  m_SizeDelta: {x: 109, y: 102}
+  m_AnchoredPosition: {x: 11.8, y: 7.4}
+  m_SizeDelta: {x: 107.6539, y: 114.0334}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7269773431703626532
 CanvasRenderer:
@@ -321,7 +321,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 02241713fcc444e279726995e7b7d551, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f208822c5153646139afba4ba5cdfb66, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -369,8 +369,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -369.68518, y: -45.065}
-  m_SizeDelta: {x: 201.1329, y: 90.13}
+  m_AnchoredPosition: {x: -369.68518, y: -38.036804}
+  m_SizeDelta: {x: 201.1329, y: 76.0737}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4087713006764966792
 CanvasRenderer:
@@ -444,8 +444,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 29.4, y: 19.1}
-  m_SizeDelta: {x: 135.7833, y: 90.13}
+  m_AnchoredPosition: {x: 21.200048, y: 14.947431}
+  m_SizeDelta: {x: 135.7833, y: 54.5611}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3265224192251963110
 CanvasRenderer:
@@ -502,8 +502,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
-  m_fontSizeBase: 80
+  m_fontSize: 55.4
+  m_fontSizeBase: 55.4
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
