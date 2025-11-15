@@ -2676,7 +2676,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "M\xFCzik"
+  m_text: "A\xE7\u0131k"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 60064e280a036465e8ac723c4371d1ce, type: 2}
   m_sharedMaterial: {fileID: -5544050357712049260, guid: 60064e280a036465e8ac723c4371d1ce, type: 2}
