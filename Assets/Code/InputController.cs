@@ -25,7 +25,21 @@ namespace Code
             _eventBus.Subscribe<Events.RestartButtonClicked>(OnGameRestart);
             _eventBus.Subscribe<Events.StopGameInput>(() => isListeningInput = false);
             _eventBus.Subscribe<Events.StartGameInput>(() => isListeningInput = true);
+            _eventBus.Subscribe<Events.OkButtonClicked>(OnOkButtonClicked);
+            _eventBus.Subscribe<Events.TurnButtonClicked>(OnTurnButtonClicked);
             _initialCameraPosition = cameraTransform.position;
+        }
+        
+        // --- MODIFIED METHOD ---
+        private void OnTurnButtonClicked(Events.TurnButtonClicked obj)
+        {
+            _hexManager.RotatePendingHex(true); // true = clockwise
+        }
+
+        // --- MODIFIED METHOD ---
+        private void OnOkButtonClicked(Events.OkButtonClicked obj)
+        {
+            _hexManager.FinalizePendingHex();
         }
 
         private void OnGameRestart()
@@ -40,6 +54,7 @@ namespace Code
             HandleCameraMovement();
         }
 
+        // --- MODIFIED METHOD ---
         private void HandleMouseInput()
         {
             if (Input.GetMouseButtonDown(0))
@@ -55,20 +70,27 @@ namespace Code
 
                 if (Vector3.Distance(_clickStartPosition, clickEndPosition) < _clickThreshold && clickDuration <= _maxClickDuration)
                 {
-                    HandleClick();
+                    HandleClick(); // This now calls HexManager.PlaceHexFromPlaceholder, which spawns a PENDING hex
                 }
             }
 
-            if (_hexManager != null && _hexManager.LastPlacedHex != null)
+            // MODIFIED ROTATION LOGIC
+            if (_hexManager != null)
             {
-                if (Input.GetMouseButtonDown(1))
+                // Rotation controls now only affect the "pending" hex
+                GameObject hexToRotate = _hexManager.PendingHex; 
+                
+                if (hexToRotate != null)
                 {
-                    _hexManager.LastPlacedHex.transform.Rotate(0, 60, 0); // Rotate clockwise
-                }
+                    if (Input.GetMouseButtonDown(1))
+                    {
+                        hexToRotate.transform.Rotate(0, 60, 0); // Rotate clockwise
+                    }
 
-                if (Input.GetMouseButtonDown(2))
-                {
-                    _hexManager.LastPlacedHex.transform.Rotate(0, -60, 0); // Rotate counterclockwise
+                    if (Input.GetMouseButtonDown(2))
+                    {
+                        hexToRotate.transform.Rotate(0, -60, 0); // Rotate counterclockwise
+                    }
                 }
             }
         }
@@ -81,7 +103,10 @@ namespace Code
                 HexPlaceholder placeholder = hit.collider.GetComponent<HexPlaceholder>();
                 if (placeholder != null)
                 {
-                    placeholder.OnClick();
+                    // This remains unchanged.
+                    // placeholder.OnClick() will call HexManager.PlaceHexFromPlaceholder()
+                    // We changed the *body* of that method in HexManager.cs
+                    placeholder.OnClick(); 
                 }
             }
         }

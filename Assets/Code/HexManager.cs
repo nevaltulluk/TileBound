@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
 namespace Code
@@ -11,13 +12,19 @@ namespace Code
         public List<GameObject> summerPrefabs; // Prefab for the hex tile
         public List<GameObject> winterPrefabs; // Prefab for the hex tile
         public List<GameObject> basicHexPrefabs; // Prefab for the hex tile
+        public SerializedDictionary<SpecialTiles, GameObject> specialTiles;
+        public SerializedDictionary<Booster, GameObject> boosterTiles;
         public GameObject placeholderPrefab; // Prefab for the placeholder tile
         public Transform hexParent; // Parent object for hexes
         public Transform placeholderParent; // Parent object for placeholders
 
         public GameObject initialHex; // Reference to the initial hex on the scene
 
-        private HashSet<Vector2Int> _takenHexes = new HashSet<Vector2Int>(); // Tracks all taken hexes
+        // --- MODIFIED VARIABLE ---
+        // Changed from HashSet<Vector2Int> to Dictionary<Vector2Int, GameObject>
+        // This lets us find a hex GameObject from its coordinates.
+        private Dictionary<Vector2Int, GameObject> _takenHexes = new Dictionary<Vector2Int, GameObject>();
+        
         private List<GameObject> _activePlaceholders = new List<GameObject>(); // Tracks active placeholders
         [NonSerialized]public GameObject LastPlacedHex;
         private EventBus _eventBus;
@@ -33,6 +40,11 @@ namespace Code
         private EventType _previewEventType;
         private int _previewPrefabIndex = -1;
 
+        private GameObject _pendingHex;
+        private Vector2Int _pendingCoords;
+        
+        public GameObject PendingHex => _pendingHex;
+
         private void Awake()
         {
             MainContainer.instance.Register(this);
@@ -44,7 +56,6 @@ namespace Code
             _eventBus.Subscribe<Events.RestartButtonClicked>(OnGameRestart);
             _eventBus.Subscribe<Events.RequestNextLevel>(OnRequestNextLevel);
         }
-
         
         private void OnRequestNextLevel(Events.RequestNextLevel obj)
         {
@@ -150,7 +161,7 @@ namespace Code
         {
             _currentLevel = level;
             SetEventTypeForLevel(_currentLevel);
-            ClearAllHexes();
+            ClearAllHexes(); // This also destroys any pending hex
             UpdateInitialHexVisuals();
             GenerateNewPreview();
             Debug.Log($"Starting Level {_currentLevel} with theme {_currentEventType}");
@@ -186,13 +197,20 @@ namespace Code
             _eventBus.Fire(new Events.OnGameStarted());
         }
 
+        // --- MODIFIED METHOD ---
         private void Initialize()
         {
             if (initialHex != null)
             {
                 Vector3 initialPosition = initialHex.transform.position;
                 Vector2Int initialCoordinates = HexGrid.Instance.WorldToAxial(new Vector2(initialPosition.x, initialPosition.y));
-                _takenHexes.Add(initialCoordinates);
+                
+                // Use new Dictionary
+                if (!_takenHexes.ContainsKey(initialCoordinates))
+                {
+                    _takenHexes.Add(initialCoordinates, initialHex);
+                }
+                
                 ShowPlaceholdersForAllHexes(HexGrid.Instance);
             }
         }
@@ -202,9 +220,12 @@ namespace Code
             StartLevel(_currentLevel);
         }
 
+        // --- MODIFIED METHOD ---
+        // This is now primarily used by LoadData
         public void InstantiateHex(Vector2Int hexCoordinates, Vector3 worldPosition, EventType eventType = EventType.None, int prefabIndex = -1)
         {
-            if (_takenHexes.Contains(hexCoordinates))
+            // Use new Dictionary
+            if (_takenHexes.ContainsKey(hexCoordinates))
             {
                 return;
             }
@@ -248,7 +269,9 @@ namespace Code
             hexInfo.EventType = eventType;
             hexInfo.PrefabIndex = prefabIndex;
             
-            _takenHexes.Add(hexCoordinates);
+            // Use new Dictionary
+            _takenHexes.Add(hexCoordinates, newHex);
+            
             LastPlacedHex = newHex;
             _addedHexes.Add(newHex);
             Debug.Log($"Hex instantiated at {hexCoordinates}.");
@@ -274,6 +297,7 @@ namespace Code
             }
         }
 
+        // --- MODIFIED METHOD ---
         public void LoadData(GameData gameData)
         {
             // Load level and set theme BEFORE loading hexes
@@ -281,7 +305,7 @@ namespace Code
             SetEventTypeForLevel(_currentLevel);
 
             // Clear the board
-            _takenHexes.Clear();
+            _takenHexes.Clear(); // Use new Dictionary
             ClearPlaceholders();
             UpdateInitialHexVisuals();
             for (var i = _addedHexes.Count - 1; i >= 0; i--)
@@ -290,12 +314,24 @@ namespace Code
             }
             _addedHexes.Clear();
 
+            // Destroy any pending hex from a previous session
+            if (_pendingHex != null)
+            {
+                Destroy(_pendingHex);
+                _pendingHex = null;
+            }
+
             // Add the initial hex
             if (initialHex != null)
             {
                 Vector3 initialPosition = initialHex.transform.position;
                 Vector2Int initialCoordinates = HexGrid.Instance.WorldToAxial(new Vector2(initialPosition.x, initialPosition.y));
-                _takenHexes.Add(initialCoordinates);
+                
+                // Use new Dictionary
+                if (!_takenHexes.ContainsKey(initialCoordinates))
+                {
+                    _takenHexes.Add(initialCoordinates, initialHex);
+                }
             }
 
             // Load saved hexes from GameData
@@ -312,9 +348,10 @@ namespace Code
             _eventBus.Fire(new Events.OnLevelStarted { Level = _currentLevel });
         }
 
+        // --- MODIFIED METHOD ---
         private void ClearAllHexes()
         {
-            _takenHexes.Clear();
+            _takenHexes.Clear(); // Use new Dictionary
             for (var i = _activePlaceholders.Count - 1; i >= 0; i--)
             {
                 var activePlaceholder = _activePlaceholders[i];
@@ -327,25 +364,38 @@ namespace Code
                 Debug.Log("DELETE HEX IN COOR: " + HexGrid.Instance.WorldToAxial(addedHex.transform.position));
                 Destroy(addedHex);
             }
+
+            if (_pendingHex != null)
+            {
+                Destroy(_pendingHex);
+                _pendingHex = null;
+            }
             
             _activePlaceholders.Clear();
             _addedHexes.Clear();
-            Initialize();
+            Initialize(); // This will re-add the initial hex to _takenHexes
             GenerateNewPreview();
         }
 
+        // --- MODIFIED METHOD ---
         public void ShowPlaceholdersForAllHexes(HexGrid hexGrid)
         {
             ClearPlaceholders();
-            foreach (var hex in _takenHexes)
+            
+            // Use new Dictionary's Keys
+            foreach (var hex in _takenHexes.Keys)
             {
                 ShowPlaceholders(hex, hexGrid);
             }
         }
 
+        // --- MODIFIED METHOD ---
         public void ShowPlaceholders(Vector2Int hexCoordinates, HexGrid hexGrid)
         {
-            List<Vector2Int> availableNeighbors = hexGrid.GetAvailableNeighbors(hexCoordinates, _takenHexes);
+            // We must pass the Keys collection to GetAvailableNeighbors.
+            // To be safe, we convert it to a new HashSet, as the original code used a HashSet.
+            var takenKeys = new HashSet<Vector2Int>(_takenHexes.Keys);
+            List<Vector2Int> availableNeighbors = hexGrid.GetAvailableNeighbors(hexCoordinates, takenKeys);
 
             foreach (var neighbor in availableNeighbors)
             {
@@ -359,21 +409,146 @@ namespace Code
             }
         }
 
+        // --- MODIFIED METHOD ---
         public void PlaceHexFromPlaceholder(Vector2Int hexCoordinates, Vector3 worldPosition)
         {
-            if (_previewPrefabIndex < 0)
+            // Use new Dictionary
+            if (_takenHexes.ContainsKey(hexCoordinates)) // Check just in case
             {
-                InstantiateHex(hexCoordinates, worldPosition, _currentEventType, -1);
-            }
-            else
-            {
-                InstantiateHex(hexCoordinates, worldPosition, _previewEventType, _previewPrefabIndex);
+                return;
             }
 
+            // If we're placing a new one, destroy the old pending one
+            if (_pendingHex != null)
+            {
+                Destroy(_pendingHex);
+            }
+
+            _pendingCoords = hexCoordinates;
+
+            // Get prefab from preview
+            List<GameObject> hexPrefabs = GetPrefabListByEvent(_previewEventType);
+            int prefabIndex = _previewPrefabIndex;
+
+            if (hexPrefabs == null || hexPrefabs.Count == 0)
+            {
+                Debug.LogWarning($"No prefabs available for preview: {_previewEventType}. Using basic.");
+                hexPrefabs = basicHexPrefabs;
+                if (hexPrefabs.Count == 0)
+                {
+                     Debug.LogError("Basic hex prefab list is also empty. Cannot spawn hex.");
+                     return;
+                }
+            }
+
+            if (prefabIndex < 0 || prefabIndex >= hexPrefabs.Count)
+            {
+                Debug.LogWarning($"Invalid preview index {prefabIndex}. Resetting to 0.");
+                prefabIndex = 0; 
+            }
+            
+            var hexPrefab = hexPrefabs[prefabIndex];
+            _pendingHex = Instantiate(hexPrefab, worldPosition, Quaternion.identity, hexParent);
+        }
+        
+        // --- MODIFIED METHOD ---
+        public void FinalizePendingHex()
+        {
+            if (_pendingHex == null)
+            {
+                Debug.LogWarning("FinalizePendingHex called, but there is no pending hex.");
+                return;
+            }
+            
+            // Use new Dictionary
+            if (_takenHexes.ContainsKey(_pendingCoords))
+            {
+                Debug.LogWarning($"Finalize: Hex coordinate {_pendingCoords} already taken.");
+                Destroy(_pendingHex);
+                _pendingHex = null;
+                return;
+            }
+            
+            // 1. Add HexInfo to the pending hex
+            var hexInfo = _pendingHex.AddComponent<HexInfo>();
+            hexInfo.HexCoordinates = _pendingCoords;
+            hexInfo.EventType = _previewEventType;
+            hexInfo.PrefabIndex = _previewPrefabIndex;
+        
+            // 2. Register it
+            _takenHexes.Add(_pendingCoords, _pendingHex); // Use new Dictionary
+            _addedHexes.Add(_pendingHex);
+            LastPlacedHex = _pendingHex; // This is now the last *finalized* hex
+            
+            Debug.Log($"Hex finalized at {_pendingCoords}.");
+
+            // 3. Clear pending state
+            _pendingHex = null;
+
+            // 4. --- NEW --- Spawn "stars" by checking neighbors
+            CheckForStarSpawns(LastPlacedHex, _pendingCoords);
+
+            // 5. Update placeholders
             ClearPlaceholders();
             ShowPlaceholdersForAllHexes(HexGrid.Instance);
-            
+        
+            // 6. Generate the next preview
             GenerateNewPreview();
+        }
+
+        // --- NEW METHOD ---
+        // This is where the star logic now lives.
+        private void CheckForStarSpawns(GameObject finalizedHex, Vector2Int hexCoords)
+        {
+            // We need a way to get neighbors. Assuming HexGrid has this method.
+            // If not, you'll need to add it to HexGrid.cs
+            if (HexGrid.Instance == null) return;
+            List<Vector2Int> neighbors = HexGrid.Instance.GetNeighbors(hexCoords); 
+
+            // 1. Get all triggers on the hex we just placed
+            HexTrigger[] myTriggers = finalizedHex.GetComponentsInChildren<HexTrigger>();
+            if (myTriggers.Length == 0) return; // No triggers on this new hex, nothing to do
+
+            // 2. Loop through all its neighbor coordinates
+            foreach (Vector2Int neighborCoord in neighbors)
+            {
+                // 3. Check if a finalized hex exists at that neighbor coordinate
+                if (_takenHexes.TryGetValue(neighborCoord, out GameObject neighborHex))
+                {
+                    // 4. It does. Get all triggers on that neighbor.
+                    HexTrigger[] neighborTriggers = neighborHex.GetComponentsInChildren<HexTrigger>();
+                    if (neighborTriggers.Length == 0) continue; // Neighbor has no triggers
+
+                    // 5. Compare all *my* triggers against all *neighbor's* triggers
+                    foreach (HexTrigger myTrigger in myTriggers)
+                    {
+                        if (!myTrigger.isSpawnStar) continue; // My trigger isn't set to spawn
+
+                        foreach (HexTrigger neighborTrigger in neighborTriggers)
+                        {
+                            if (!neighborTrigger.isSpawnStar) continue; // Neighbor's trigger isn't set to spawn
+                            
+                            if (myTrigger.tileType == neighborTrigger.tileType || 
+                                myTrigger.tileType == TileType.All || 
+                                neighborTrigger.tileType == TileType.All)
+                            {
+                                _eventBus.Fire(new Events.SpawnStar(neighborHex.transform.position));
+                                Debug.Log($"Spawn Star --- MyType: {myTrigger.tileType}, NeighborType: {neighborTrigger.tileType}");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        
+        public void RotatePendingHex(bool clockwise)
+        {
+            if (_pendingHex != null)
+            {
+                float rotation = clockwise ? 60 : -60;
+                _pendingHex.transform.Rotate(0, rotation, 0);
+            }
         }
 
         private void ClearPlaceholders()
