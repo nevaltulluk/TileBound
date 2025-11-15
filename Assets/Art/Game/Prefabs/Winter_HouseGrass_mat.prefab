@@ -14,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 266938447438999978, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: isSpawnStar
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2637317463548664229, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: m_Name
@@ -26,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7640786633013670486, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: isSpawnStar
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8119224627945416237, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: tileType
@@ -34,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8119224627945416237, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: isSpawnStar
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9137178292919480501, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: m_LocalPosition.x

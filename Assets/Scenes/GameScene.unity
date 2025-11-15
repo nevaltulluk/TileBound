@@ -3470,9 +3470,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: HomePage
       objectReference: {fileID: 0}
+    - target: {fileID: 6973087903276658, guid: cbbd7a6a6c9a6da4d8838871b9380e78, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2259127591089604043, guid: cbbd7a6a6c9a6da4d8838871b9380e78, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3424200081296962085, guid: cbbd7a6a6c9a6da4d8838871b9380e78, type: 3}
       propertyPath: m_RaycastTarget
@@ -3670,6 +3674,10 @@ PrefabInstance:
     - target: {fileID: 6908753420975485591, guid: 4b437550ff7084ef394fc250734bbee6, type: 3}
       propertyPath: m_Name
       value: Gameplay
+      objectReference: {fileID: 0}
+    - target: {fileID: 6908753420975485591, guid: 4b437550ff7084ef394fc250734bbee6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7394151529046231463, guid: 4b437550ff7084ef394fc250734bbee6, type: 3}
       propertyPath: m_IsActive
