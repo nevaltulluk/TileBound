@@ -10,6 +10,8 @@ public class GameHudPopupController : MonoBehaviour
     [SerializeField]private Image starPercentage;
     [SerializeField]private TextMeshProUGUI starText;
     [SerializeField]private TextMeshProUGUI starTextShadow;
+    [SerializeField]private Button okButton;
+    [SerializeField]private Button turnButton;
     void Start()
     {
         Camera.main.depthTextureMode |= DepthTextureMode.Depth;
@@ -18,6 +20,8 @@ public class GameHudPopupController : MonoBehaviour
         _eventBus.Subscribe<Events.OnGameStarted>(OnGameStarted);
         _eventBus.Subscribe<Events.GameStartButtonClicked>(OnGameStartButtonClicked);
         _eventBus.Subscribe<Events.OnStarCountChanged>(OnStarCountChanged);
+        okButton.onClick.AddListener(()=> _eventBus.Fire(new Events.OkButtonClicked()));
+        turnButton.onClick.AddListener(()=> _eventBus.Fire(new Events.TurnButtonClicked()));
         LoadData(dataManager.GetData());
         
     }

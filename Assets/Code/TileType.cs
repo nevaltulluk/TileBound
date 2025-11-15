@@ -4,6 +4,7 @@
     {
         Grass,
         Forest,
-        House
+        House,
+        All
     }
 }

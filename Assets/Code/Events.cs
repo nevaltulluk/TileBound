@@ -25,6 +25,9 @@ namespace Code
         public struct OnGameStarted{}
         public struct OnGameFirstOpen{}
         public struct GameStartButtonClicked{}
+        
+        public struct OkButtonClicked{}
+        public struct TurnButtonClicked{}
 
         public struct OnStarCountChanged
         {

@@ -18,6 +18,18 @@ public class HexGrid : MonoBehaviour
     
     public float hexSize = 1.0f; // Size of the hexagon
 
+    // --- NEW: Static array for neighbor directions ---
+    // Define the six possible neighbor directions in axial coordinates
+    private static readonly Vector2Int[] _directions = new Vector2Int[]
+    {
+        new Vector2Int(1, 0),  // East
+        new Vector2Int(-1, 0), // West
+        new Vector2Int(0, 1),  // Northeast
+        new Vector2Int(0, -1), // Southwest
+        new Vector2Int(1, -1), // Southeast
+        new Vector2Int(-1, 1)  // Northwest
+    };
+
     public Vector3 AxialToWorld(int q, int r)
     {
         float x = hexSize * Mathf.Sqrt(3) * (q + r / 2f);
@@ -26,6 +38,7 @@ public class HexGrid : MonoBehaviour
     }
 
     // Convert world position (x, z) to axial coordinates (q, r)
+    // Note: This assumes position.y maps to the world's Z-axis
     public Vector2Int WorldToAxial(Vector2 position)
     {
         float q = (Mathf.Sqrt(3) / 3 * position.x - 1f / 3 * position.y) / hexSize;
@@ -34,24 +47,14 @@ public class HexGrid : MonoBehaviour
         return new Vector2Int(Mathf.RoundToInt(q), Mathf.RoundToInt(r));
     }
 
+    // --- MODIFIED: Now uses the static _directions array ---
     // Find all neighboring grids of a given grid (q, r), excluding already taken ones
     public List<Vector2Int> GetAvailableNeighbors(Vector2Int currentHex, HashSet<Vector2Int> takenHexes)
     {
-        // Define the six possible neighbor directions in axial coordinates
-        Vector2Int[] directions = new Vector2Int[]
-        {
-            new Vector2Int(1, 0),  // East
-            new Vector2Int(-1, 0), // West
-            new Vector2Int(0, 1),  // Northeast
-            new Vector2Int(0, -1), // Southwest
-            new Vector2Int(1, -1), // Southeast
-            new Vector2Int(-1, 1)  // Northwest
-        };
-
         List<Vector2Int> availableNeighbors = new List<Vector2Int>();
 
         // Check each neighbor
-        foreach (var direction in directions)
+        foreach (var direction in _directions)
         {
             Vector2Int neighbor = currentHex + direction;
 
@@ -63,5 +66,17 @@ public class HexGrid : MonoBehaviour
         }
 
         return availableNeighbors;
+    }
+    
+    public List<Vector2Int> GetNeighbors(Vector2Int currentHex)
+    {
+        List<Vector2Int> neighbors = new List<Vector2Int>();
+        
+        foreach (var direction in _directions)
+        {
+            neighbors.Add(currentHex + direction);
+        }
+
+        return neighbors;
     }
 }

@@ -17,7 +17,7 @@
         WindMill
     }
 
-    public enum PowerUps
+    public enum Booster
     {
         Coin,
         Time,
