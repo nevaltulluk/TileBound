@@ -12,6 +12,8 @@ public class GameHudPopupController : MonoBehaviour
     [SerializeField]private TextMeshProUGUI starTextShadow;
     [SerializeField]private Button okButton;
     [SerializeField]private Button turnButton;
+    [SerializeField]private Button freezeButton;
+    [SerializeField]private Button starButton;
     void Start()
     {
         Camera.main.depthTextureMode |= DepthTextureMode.Depth;
@@ -22,6 +24,8 @@ public class GameHudPopupController : MonoBehaviour
         _eventBus.Subscribe<Events.OnStarCountChanged>(OnStarCountChanged);
         okButton.onClick.AddListener(()=> _eventBus.Fire(new Events.OkButtonClicked()));
         turnButton.onClick.AddListener(()=> _eventBus.Fire(new Events.TurnButtonClicked()));
+        freezeButton.onClick.AddListener(() => _eventBus.Fire(new Events.StartFreezeTimeBooster(10f)));
+        starButton.onClick.AddListener(() => _eventBus.Fire(new Events.StartDoubleStarsBooster(10f)));
         LoadData(dataManager.GetData());
         
     }

@@ -52,5 +52,29 @@ namespace Code
                 this.Level = level;
             }
         }
+        
+        public struct StartFreezeTimeBooster
+        {
+            public float Duration;
+
+            public StartFreezeTimeBooster(float duration)
+            {
+                this.Duration = duration;
+            }
+        }
+        
+        public struct EndFreezeTimeBooster {}
+        
+        public struct StartDoubleStarsBooster
+        {
+            public float Duration;
+
+            public StartDoubleStarsBooster(float duration)
+            {
+                this.Duration = duration;
+            }
+        }
+        
+        public struct EndDoubleStarsBooster {}
     }
 }

@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour, IPersistable
     private bool _isGameOver;
     private EventBus _eventBus;
     private float _currentStars;
+    private bool _isFreezeTimeActive;
+    private bool _isDoubleStarsActive;
 
     private void Start()
     {
@@ -22,6 +24,10 @@ public class GameManager : MonoBehaviour, IPersistable
         _eventBus.Subscribe<Events.GameStartButtonClicked>(OnGameStarted);
         _eventBus.Subscribe<Events.SpawnStar>(OnSpawnStar);
         _eventBus.Subscribe<Events.OnLevelStarted>(OnLevelStarted);
+        _eventBus.Subscribe<Events.StartFreezeTimeBooster>(OnStartFreezeTimeBooster);
+        _eventBus.Subscribe<Events.EndFreezeTimeBooster>(OnEndFreezeTimeBooster);
+        _eventBus.Subscribe<Events.StartDoubleStarsBooster>(OnStartDoubleStarsBooster);
+        _eventBus.Subscribe<Events.EndDoubleStarsBooster>(OnEndDoubleStarsBooster);
         dataManager.AddToPersistable(this);
         LoadData(dataManager.GetData());
         SetBgColor();
@@ -37,8 +43,29 @@ public class GameManager : MonoBehaviour, IPersistable
 
     private void OnSpawnStar(Events.SpawnStar obj)
     {
-        _currentStars++;
+        float starIncrement = _isDoubleStarsActive ? 2f : 1f;
+        _currentStars += starIncrement;
         _eventBus.Fire(new Events.OnStarCountChanged(_currentStars));
+    }
+    
+    private void OnStartFreezeTimeBooster(Events.StartFreezeTimeBooster obj)
+    {
+        _isFreezeTimeActive = true;
+    }
+    
+    private void OnEndFreezeTimeBooster(Events.EndFreezeTimeBooster obj)
+    {
+        _isFreezeTimeActive = false;
+    }
+    
+    private void OnStartDoubleStarsBooster(Events.StartDoubleStarsBooster obj)
+    {
+        _isDoubleStarsActive = true;
+    }
+    
+    private void OnEndDoubleStarsBooster(Events.EndDoubleStarsBooster obj)
+    {
+        _isDoubleStarsActive = false;
     }
 
     private void OnGameStarted(Events.GameStartButtonClicked obj)
@@ -52,6 +79,8 @@ public class GameManager : MonoBehaviour, IPersistable
         _isGameOver = false;
         _seaRenderer.material.color = _startingColor;
         _currentStars = 0;
+        _isFreezeTimeActive = false;
+        _isDoubleStarsActive = false;
         _eventBus.Fire(new Events.OnStarCountChanged( _currentStars));
     }
 
@@ -66,7 +95,12 @@ public class GameManager : MonoBehaviour, IPersistable
 
         string timeFormatted = $"{minutes}:{seconds:00}";
         timerText.text = timeFormatted;
-        _remainingTime -= Time.deltaTime;
+        
+        // Only decrease time if freeze time booster is not active
+        if (!_isFreezeTimeActive)
+        {
+            _remainingTime -= Time.deltaTime;
+        }
         SetBgColor();
         if (_remainingTime < 0)
         {

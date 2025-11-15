@@ -26,6 +26,7 @@ namespace Code
         private Dictionary<Vector2Int, GameObject> _takenHexes = new Dictionary<Vector2Int, GameObject>();
         
         private List<GameObject> _activePlaceholders = new List<GameObject>(); // Tracks active placeholders
+        private HashSet<string> _spawnedStarPairs = new HashSet<string>(); // Tracks which hex pairs have already spawned stars
         [NonSerialized]public GameObject LastPlacedHex;
         private EventBus _eventBus;
         private EventType _currentEventType = EventType.None;
@@ -352,6 +353,7 @@ namespace Code
         private void ClearAllHexes()
         {
             _takenHexes.Clear(); // Use new Dictionary
+            _spawnedStarPairs.Clear(); // Clear star spawn tracking
             for (var i = _activePlaceholders.Count - 1; i >= 0; i--)
             {
                 var activePlaceholder = _activePlaceholders[i];
@@ -519,6 +521,15 @@ namespace Code
                     HexTrigger[] neighborTriggers = neighborHex.GetComponentsInChildren<HexTrigger>();
                     if (neighborTriggers.Length == 0) continue; // Neighbor has no triggers
 
+                    // Create a normalized key for this hex pair (order-independent)
+                    string pairKey = GetHexPairKey(hexCoords, neighborCoord);
+                    
+                    // Check if we've already spawned a star for this pair
+                    if (_spawnedStarPairs.Contains(pairKey))
+                    {
+                        continue; // Already spawned a star for this pair, skip
+                    }
+
                     // 5. Compare all *my* triggers against all *neighbor's* triggers
                     foreach (HexTrigger myTrigger in myTriggers)
                     {
@@ -532,12 +543,29 @@ namespace Code
                                 myTrigger.tileType == TileType.All || 
                                 neighborTrigger.tileType == TileType.All)
                             {
+                                // Mark this pair as having spawned a star
+                                _spawnedStarPairs.Add(pairKey);
                                 _eventBus.Fire(new Events.SpawnStar(neighborHex.transform.position));
                                 Debug.Log($"Spawn Star --- MyType: {myTrigger.tileType}, NeighborType: {neighborTrigger.tileType}");
+                                break; // Only spawn one star per hex pair
                             }
                         }
                     }
                 }
+            }
+        }
+        
+        // Helper method to create a normalized key for a hex pair (order-independent)
+        private string GetHexPairKey(Vector2Int coord1, Vector2Int coord2)
+        {
+            // Ensure consistent ordering so (A, B) and (B, A) produce the same key
+            if (coord1.x < coord2.x || (coord1.x == coord2.x && coord1.y < coord2.y))
+            {
+                return $"{coord1.x},{coord1.y}_{coord2.x},{coord2.y}";
+            }
+            else
+            {
+                return $"{coord2.x},{coord2.y}_{coord1.x},{coord1.y}";
             }
         }
 
