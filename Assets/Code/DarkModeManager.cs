@@ -5,6 +5,7 @@ using UnityEngine;
 public class DarkModeManager : MonoBehaviour, IService
 {
     private List<DarkModeImage> darkModeImages = new List<DarkModeImage>();
+    private List<SeaMaterialChanger> seaMaterialChangers = new List<SeaMaterialChanger>();
     private EventBus _eventBus;
 
     private void Awake()
@@ -16,10 +17,20 @@ public class DarkModeManager : MonoBehaviour, IService
 
     private void Start()
     {
-        // Find all objects with DarkModeImage script in scene
+        // Find all objects with DarkModeImage and SeaMaterialChanger scripts in scene
+        RefreshLists();
+    }
+
+    private void RefreshLists()
+    {
+        // Refresh both lists to catch all objects (active or inactive)
         darkModeImages.Clear();
         darkModeImages.AddRange(FindObjectsOfType<DarkModeImage>(true));
-        Debug.Log($"DarkModeManager found {darkModeImages.Count} DarkModeImage components in scene.");
+        
+        seaMaterialChangers.Clear();
+        seaMaterialChangers.AddRange(FindObjectsOfType<SeaMaterialChanger>(true));
+        
+        Debug.Log($"DarkModeManager found {darkModeImages.Count} DarkModeImage components and {seaMaterialChangers.Count} SeaMaterialChanger components in scene.");
     }
 
     private void Update()
@@ -37,6 +48,10 @@ public class DarkModeManager : MonoBehaviour, IService
 
     private void OnToggleDarkMode(Events.ToggleDarkMode evt)
     {
+        // Refresh lists to ensure we have all current objects (active or inactive)
+        RefreshLists();
+
+        // Update all images (active or inactive)
         foreach (var darkModeImage in darkModeImages)
         {
             if (darkModeImage != null)
@@ -44,7 +59,17 @@ public class DarkModeManager : MonoBehaviour, IService
                 darkModeImage.SetDarkMode(evt.IsDark);
             }
         }
-        Debug.Log($"Dark mode toggled: {evt.IsDark}");
+
+        // Update all sea materials (active or inactive)
+        foreach (var seaMaterialChanger in seaMaterialChangers)
+        {
+            if (seaMaterialChanger != null)
+            {
+                seaMaterialChanger.SetDarkMode(evt.IsDark);
+            }
+        }
+        
+        Debug.Log($"Dark mode toggled: {evt.IsDark} - Updated {darkModeImages.Count} images and {seaMaterialChangers.Count} sea materials.");
     }
 }
 

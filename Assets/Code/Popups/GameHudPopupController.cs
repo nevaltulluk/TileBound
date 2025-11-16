@@ -1,4 +1,5 @@
 using Code;
+using Code.Popups;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +7,12 @@ using UnityEngine.UI;
 public class GameHudPopupController : MonoBehaviour
 {
     private EventBus _eventBus;
+    
+    [Header("Animation Settings")]
+    [SerializeField] public bool useAnimations = true;
+    
     [SerializeField]private GameObject gameHud;
+    [SerializeField]private GameObject externalGameplayUI;
     [SerializeField]private Image starPercentage;
     [SerializeField]private TextMeshProUGUI starText;
     [SerializeField]private TextMeshProUGUI starTextShadow;
@@ -45,11 +51,19 @@ public class GameHudPopupController : MonoBehaviour
 
     private void OnGameStartButtonClicked(Events.GameStartButtonClicked obj)
     {
-        gameHud.SetActive(true);
+        UIAnimationHelper.SetActiveWithAnimation(gameHud, true, useAnimations, this);
+        if (externalGameplayUI != null)
+        {
+            UIAnimationHelper.SetActiveWithAnimation(externalGameplayUI, true, useAnimations, this);
+        }
     }
 
     private void OnGameStarted(Events.OnGameStarted obj)
     {
-        gameHud.SetActive(false);
+        UIAnimationHelper.SetActiveWithAnimation(gameHud, false, useAnimations, this);
+        if (externalGameplayUI != null)
+        {
+            UIAnimationHelper.SetActiveWithAnimation(externalGameplayUI, false, useAnimations, this);
+        }
     }
 }

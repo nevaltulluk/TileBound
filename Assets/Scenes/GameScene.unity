@@ -3314,6 +3314,7 @@ GameObject:
   - component: {fileID: 1491844026}
   - component: {fileID: 1491844025}
   - component: {fileID: 1491844024}
+  - component: {fileID: 1491844027}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -3411,6 +3412,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1491844022}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1491844027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1491844022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3feed26e847ba6344b97f52f035929b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightMaterial: {fileID: 2100000, guid: 809e04c23275efb4ab848bb42a6d4b7e, type: 2}
+  darkMaterial: {fileID: 2100000, guid: 77eb4a3ec0ba15944a299e0e098513e1, type: 2}
+  targetRenderer: {fileID: 1491844025}
 --- !u!114 &1499495973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3690,7 +3706,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1757551562
 Transform:
   m_ObjectHideFlags: 0
@@ -6095,6 +6111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0f7a615c46341f1a012f1da23fb28ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useAnimations: 1
   _button: {fileID: 265015880}
   hud: {fileID: 3152341168096345528}
 --- !u!1 &3152341168096345531 stripped
@@ -6337,6 +6354,10 @@ PrefabInstance:
     - target: {fileID: 6973087903276658, guid: cbbd7a6a6c9a6da4d8838871b9380e78, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561515469292214248, guid: cbbd7a6a6c9a6da4d8838871b9380e78, type: 3}
+      propertyPath: useAnimations
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2259127591089604043, guid: cbbd7a6a6c9a6da4d8838871b9380e78, type: 3}
       propertyPath: m_IsActive
@@ -6669,6 +6690,14 @@ PrefabInstance:
       propertyPath: freezeButton
       value: 
       objectReference: {fileID: 3820890361313341836}
+    - target: {fileID: 5791045917245522875, guid: 4b437550ff7084ef394fc250734bbee6, type: 3}
+      propertyPath: useAnimations
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5791045917245522875, guid: 4b437550ff7084ef394fc250734bbee6, type: 3}
+      propertyPath: externalGameplayUI
+      value: 
+      objectReference: {fileID: 1757551561}
     - target: {fileID: 6908753420975485591, guid: 4b437550ff7084ef394fc250734bbee6, type: 3}
       propertyPath: m_Name
       value: Gameplay

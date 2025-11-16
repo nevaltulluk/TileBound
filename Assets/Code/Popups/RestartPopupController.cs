@@ -1,9 +1,13 @@
 using Code;
+using Code.Popups;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class RestartPopupController : MonoBehaviour
 {
+    [Header("Animation Settings")]
+    [SerializeField] public bool useAnimations = true;
+    
     [SerializeField] private GameObject container;
     [SerializeField] private Button restartButton;
     private EventBus _eventBus;
@@ -16,7 +20,7 @@ public class RestartPopupController : MonoBehaviour
 
     private void OnRestartButtonClicked()
     {
-        container.SetActive(false);
+        UIAnimationHelper.SetActiveWithAnimation(container, false, useAnimations, this);
         _eventBus.Fire(new Events.RestartButtonClicked());
         _eventBus.Fire(new Events.StartGameInput());
     }
@@ -24,7 +28,7 @@ public class RestartPopupController : MonoBehaviour
 
     private void OnTimeOver()
     {
-        container.SetActive(true);
+        UIAnimationHelper.SetActiveWithAnimation(container, true, useAnimations, this);
         _eventBus.Fire(new Events.StopGameInput());
     }
 

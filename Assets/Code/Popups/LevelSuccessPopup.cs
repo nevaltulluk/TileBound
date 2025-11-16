@@ -6,6 +6,9 @@ namespace Code.Popups
 {
     public class LevelSuccessPopup : MonoBehaviour
     {
+        [Header("Animation Settings")]
+        [SerializeField] public bool useAnimations = true;
+        
         [SerializeField] private Button _button;
         [SerializeField] private GameObject hud;
         
@@ -22,13 +25,13 @@ namespace Code.Popups
         {
             _eventBus.Fire(new Events.RequestNextLevel());
             _eventBus.Fire(new Events.StartGameInput());
-            hud.SetActive(false);
+            UIAnimationHelper.SetActiveWithAnimation(hud, false, useAnimations, this);
         }
 
         private void OnLevelSuccess(Events.LevelSuccess obj)
         {
             _eventBus.Fire(new Events.StopGameInput());
-            hud.SetActive(true);
+            UIAnimationHelper.SetActiveWithAnimation(hud, true, useAnimations, this);
         }
         
         

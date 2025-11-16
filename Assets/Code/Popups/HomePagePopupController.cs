@@ -2,10 +2,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Events = Code.Events;
+using Code.Popups;
 
 public class HomePagePopupController : MonoBehaviour
 {
     private EventBus _eventBus;
+    
+    [Header("Animation Settings")]
+    [SerializeField] public bool useAnimations = true;
     
     [SerializeField] private Button _startGameButton;
     [SerializeField] private GameObject hud;
@@ -24,7 +28,7 @@ public class HomePagePopupController : MonoBehaviour
 
     private void OnGameFirstOpen(Events.OnGameFirstOpen obj)
     {
-        hud.SetActive(true);
+        UIAnimationHelper.SetActiveWithAnimation(hud, true, useAnimations, this);
         _eventBus.Fire(new Events.StopGameInput());
     }
 
@@ -38,6 +42,6 @@ public class HomePagePopupController : MonoBehaviour
     {
         _eventBus.Fire(new Events.GameStartButtonClicked());
         _eventBus.Fire(new Events.StartGameInput());
-        hud.SetActive(false);
+        UIAnimationHelper.SetActiveWithAnimation(hud, false, useAnimations, this);
     }
 }

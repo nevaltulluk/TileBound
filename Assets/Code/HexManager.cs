@@ -28,6 +28,16 @@ namespace Code
         private List<GameObject> _activePlaceholders = new List<GameObject>(); // Tracks active placeholders
         private HashSet<string> _spawnedStarPairs = new HashSet<string>(); // Tracks which hex pairs have already spawned stars
         [NonSerialized]public GameObject LastPlacedHex;
+        
+        // Debug visualization for trigger matching
+        private struct TriggerMatchDebug
+        {
+            public Vector3 myTriggerPos;
+            public Vector3 neighborTriggerPos;
+            public Vector3 starSpawnPos;
+            public float timestamp;
+        }
+        private List<TriggerMatchDebug> _triggerMatches = new List<TriggerMatchDebug>();
         private EventBus _eventBus;
         private EventType _currentEventType = EventType.None;
         private List<GameObject> _addedHexes = new List<GameObject>();
@@ -353,7 +363,9 @@ namespace Code
         private void ClearAllHexes()
         {
             _takenHexes.Clear(); // Use new Dictionary
-            _spawnedStarPairs.Clear(); // Clear star spawn tracking
+            _spawnedStarPairs.Clear(); // Clear star spawn tracking (legacy, kept for compatibility)
+            HexTrigger.ClearSpawnedPairs(); // Clear trigger-based star spawn tracking
+            _triggerMatches.Clear(); // Clear debug visualization
             for (var i = _activePlaceholders.Count - 1; i >= 0; i--)
             {
                 var activePlaceholder = _activePlaceholders[i];
@@ -487,8 +499,8 @@ namespace Code
             // 3. Clear pending state
             _pendingHex = null;
 
-            // 4. --- NEW --- Spawn "stars" by checking neighbors
-            CheckForStarSpawns(LastPlacedHex, _pendingCoords);
+            // 4. Star spawning is now handled by OnTriggerEnter in HexTrigger
+            // No need to manually check for star spawns anymore
 
             // 5. Update placeholders
             ClearPlaceholders();
@@ -498,9 +510,10 @@ namespace Code
             GenerateNewPreview();
         }
 
-        // --- NEW METHOD ---
-        // This is where the star logic now lives.
-        private void CheckForStarSpawns(GameObject finalizedHex, Vector2Int hexCoords)
+        // --- OLD METHOD - NO LONGER USED ---
+        // Star spawning is now handled by OnTriggerEnter in HexTrigger
+        // Keeping this for reference but it's disabled
+        private void CheckForStarSpawns_OLD(GameObject finalizedHex, Vector2Int hexCoords)
         {
             // We need a way to get neighbors. Assuming HexGrid has this method.
             // If not, you'll need to add it to HexGrid.cs
@@ -532,15 +545,57 @@ namespace Code
 
                     // 5. Check if there's any matching trigger pair between the two hexes
                     // Since triggers are on hexagon edges, only one matching pair can exist per hex pair
+                    // We need to verify that the triggers are actually touching/adjacent to each other
+                    
+                    // Get hex center positions to calculate the direction between hexes
+                    Vector3 myHexCenter = finalizedHex.transform.position;
+                    Vector3 neighborHexCenter = neighborHex.transform.position;
+                    Vector3 hexToNeighborDir = (neighborHexCenter - myHexCenter).normalized;
+                    
                     bool foundMatch = false;
                     foreach (HexTrigger myTrigger in myTriggers)
                     {
                         if (!myTrigger.isSpawnStar) continue; // My trigger isn't set to spawn
                         if (foundMatch) break; // Already found a match, no need to check more
 
+                        // Check if this trigger is on the edge facing the neighbor
+                        Vector3 myTriggerPos = myTrigger.transform.position;
+                        Vector3 myTriggerToHexCenter = (myHexCenter - myTriggerPos).normalized;
+                        Vector3 myTriggerToNeighbor = (neighborHexCenter - myTriggerPos).normalized;
+                        
+                        // The trigger should be roughly in the direction of the neighbor hex
+                        // Dot product should be positive (trigger is between center and neighbor)
+                        float myTriggerAlignment = Vector3.Dot(myTriggerToNeighbor, hexToNeighborDir);
+                        
+                        // Only consider triggers that are facing towards the neighbor (threshold: > 0.5 means roughly 60 degrees or closer)
+                        if (myTriggerAlignment < 0.5f) continue;
+
                         foreach (HexTrigger neighborTrigger in neighborTriggers)
                         {
                             if (!neighborTrigger.isSpawnStar) continue; // Neighbor's trigger isn't set to spawn
+                            
+                            // Check if neighbor trigger is on the edge facing back to my hex
+                            Vector3 neighborTriggerPos = neighborTrigger.transform.position;
+                            Vector3 neighborTriggerToHexCenter = (neighborHexCenter - neighborTriggerPos).normalized;
+                            Vector3 neighborTriggerToMyHex = (myHexCenter - neighborTriggerPos).normalized;
+                            Vector3 neighborToMyHexDir = -hexToNeighborDir; // Opposite direction
+                            
+                            // The neighbor trigger should be roughly in the direction of my hex
+                            float neighborTriggerAlignment = Vector3.Dot(neighborTriggerToMyHex, neighborToMyHexDir);
+                            
+                            // Only consider triggers that are facing towards each other
+                            if (neighborTriggerAlignment < 0.5f) continue;
+                            
+                            // Check if the two triggers are actually close to each other (within reasonable distance)
+                            float distanceBetweenTriggers = Vector3.Distance(myTriggerPos, neighborTriggerPos);
+                            float expectedEdgeDistance = Vector3.Distance(myHexCenter, neighborHexCenter) * 0.3f; // Triggers should be on edge, roughly 30% of hex distance from center
+                            float maxDistance = expectedEdgeDistance * 2f; // Allow some tolerance
+                            
+                            if (distanceBetweenTriggers > maxDistance)
+                            {
+                                Debug.Log($"Triggers too far apart: {distanceBetweenTriggers} > {maxDistance}, skipping match");
+                                continue;
+                            }
                             
                             if (myTrigger.tileType == neighborTrigger.tileType || 
                                 myTrigger.tileType == TileType.All || 
@@ -548,8 +603,25 @@ namespace Code
                             {
                                 // Mark this hex pair as having spawned a star
                                 _spawnedStarPairs.Add(pairKey);
-                                _eventBus.Fire(new Events.SpawnStar(neighborHex.transform.position));
-                                Debug.Log($"Spawn Star --- MyType: {myTrigger.tileType}, NeighborType: {neighborTrigger.tileType}");
+                                
+                                // Spawn star at the average position of both matching triggers
+                                // Both triggers are on the same edge but have different parents, so averaging gives the correct edge position
+                                Vector3 triggerPosition = (myTriggerPos + neighborTriggerPos) / 2f;
+                                
+                                // Store for gizmo visualization
+                                _triggerMatches.Add(new TriggerMatchDebug
+                                {
+                                    myTriggerPos = myTriggerPos,
+                                    neighborTriggerPos = neighborTriggerPos,
+                                    starSpawnPos = triggerPosition,
+                                    timestamp = Time.time
+                                });
+                                
+                                // Keep only recent matches (last 30 seconds)
+                                _triggerMatches.RemoveAll(m => Time.time - m.timestamp > 30f);
+                                
+                                Debug.Log($"Spawn Star --- MyType: {myTrigger.tileType}, NeighborType: {neighborTrigger.tileType}, Distance: {distanceBetweenTriggers}, MyAlign: {myTriggerAlignment}, NeighborAlign: {neighborTriggerAlignment}");
+                                _eventBus.Fire(new Events.SpawnStar(triggerPosition));
                                 foundMatch = true;
                                 break; // Found a match, no need to check more triggers
                             }
@@ -591,6 +663,38 @@ namespace Code
             }
 
             _activePlaceholders.Clear();
+        }
+        
+        // Gizmo visualization for debugging trigger matches
+        private void OnDrawGizmos()
+        {
+            // Draw all recent trigger matches
+            foreach (var match in _triggerMatches)
+            {
+                // Draw my trigger position (green sphere)
+                Gizmos.color = Color.green;
+                Gizmos.DrawSphere(match.myTriggerPos, 0.1f);
+                Gizmos.DrawWireSphere(match.myTriggerPos, 0.15f);
+                
+                // Draw neighbor trigger position (blue sphere)
+                Gizmos.color = Color.blue;
+                Gizmos.DrawSphere(match.neighborTriggerPos, 0.1f);
+                Gizmos.DrawWireSphere(match.neighborTriggerPos, 0.15f);
+                
+                // Draw line between the two triggers (yellow)
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawLine(match.myTriggerPos, match.neighborTriggerPos);
+                
+                // Draw star spawn position (red sphere)
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(match.starSpawnPos, 0.15f);
+                Gizmos.DrawWireSphere(match.starSpawnPos, 0.2f);
+                
+                // Draw line from midpoint to spawn position (cyan)
+                Vector3 midpoint = (match.myTriggerPos + match.neighborTriggerPos) / 2f;
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawLine(midpoint, match.starSpawnPos);
+            }
         }
     }
 }

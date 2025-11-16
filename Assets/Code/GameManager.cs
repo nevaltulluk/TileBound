@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour, IPersistable
         _eventBus.Subscribe<Events.EndFreezeTimeBooster>(OnEndFreezeTimeBooster);
         _eventBus.Subscribe<Events.StartDoubleStarsBooster>(OnStartDoubleStarsBooster);
         _eventBus.Subscribe<Events.EndDoubleStarsBooster>(OnEndDoubleStarsBooster);
+        _eventBus.Subscribe<Events.LevelSuccess>(OnLevelSuccess);
+        _eventBus.Subscribe<Events.TimeOver>(OnTimeOver);
         dataManager.AddToPersistable(this);
         LoadData(dataManager.GetData());
         SetBgColor();
@@ -77,11 +79,28 @@ public class GameManager : MonoBehaviour, IPersistable
     {
         _remainingTime = Constants.TotalTime;
         _isGameOver = false;
-        _seaRenderer.material.color = _startingColor;
+        SetSeaBaseColor(_startingColor);
         _currentStars = 0;
         _isFreezeTimeActive = false;
         _isDoubleStarsActive = false;
         _eventBus.Fire(new Events.OnStarCountChanged( _currentStars));
+    }
+
+    private void OnLevelSuccess(Events.LevelSuccess obj)
+    {
+        _isGameOver = true;
+        ResetTimer();
+    }
+
+    private void OnTimeOver(Events.TimeOver obj)
+    {
+        ResetTimer();
+    }
+
+    private void ResetTimer()
+    {
+        _remainingTime = Constants.TotalTime;
+        SetSeaBaseColor(_startingColor);
     }
 
     private void Update()
@@ -104,10 +123,10 @@ public class GameManager : MonoBehaviour, IPersistable
         SetBgColor();
         if (_remainingTime < 0)
         {
-            _seaRenderer.material.color = _endingColor;
+            SetSeaBaseColor(_endingColor);
             Debug.Log("Game Over");
-            _eventBus.Fire(new Events.TimeOver());
             _isGameOver = true;
+            _eventBus.Fire(new Events.TimeOver());
         }
         
     }
@@ -117,7 +136,17 @@ public class GameManager : MonoBehaviour, IPersistable
         if (_remainingTime < Constants.ChangeShiftTimer)
         {
             float t = 1f - (_remainingTime / Constants.ChangeShiftTimer);
-            _seaRenderer.material.color = Color.Lerp(_startingColor, _endingColor, t);
+            Color targetColor = Color.Lerp(_startingColor, _endingColor, t);
+            SetSeaBaseColor(targetColor);
+        }
+    }
+
+    private void SetSeaBaseColor(Color color)
+    {
+        if (_seaRenderer != null && _seaRenderer.material != null)
+        {
+            // Set the base color property (_Color) to make it darker/lighter
+            _seaRenderer.material.SetColor("_Color", color);
         }
     }
 
