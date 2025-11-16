@@ -524,16 +524,19 @@ namespace Code
                     // Create a normalized key for this hex pair (order-independent)
                     string pairKey = GetHexPairKey(hexCoords, neighborCoord);
                     
-                    // Check if we've already spawned a star for this pair
+                    // Check if we've already spawned a star for this hex pair
                     if (_spawnedStarPairs.Contains(pairKey))
                     {
                         continue; // Already spawned a star for this pair, skip
                     }
 
-                    // 5. Compare all *my* triggers against all *neighbor's* triggers
+                    // 5. Check if there's any matching trigger pair between the two hexes
+                    // Since triggers are on hexagon edges, only one matching pair can exist per hex pair
+                    bool foundMatch = false;
                     foreach (HexTrigger myTrigger in myTriggers)
                     {
                         if (!myTrigger.isSpawnStar) continue; // My trigger isn't set to spawn
+                        if (foundMatch) break; // Already found a match, no need to check more
 
                         foreach (HexTrigger neighborTrigger in neighborTriggers)
                         {
@@ -543,11 +546,12 @@ namespace Code
                                 myTrigger.tileType == TileType.All || 
                                 neighborTrigger.tileType == TileType.All)
                             {
-                                // Mark this pair as having spawned a star
+                                // Mark this hex pair as having spawned a star
                                 _spawnedStarPairs.Add(pairKey);
                                 _eventBus.Fire(new Events.SpawnStar(neighborHex.transform.position));
                                 Debug.Log($"Spawn Star --- MyType: {myTrigger.tileType}, NeighborType: {neighborTrigger.tileType}");
-                                break; // Only spawn one star per hex pair
+                                foundMatch = true;
+                                break; // Found a match, no need to check more triggers
                             }
                         }
                     }

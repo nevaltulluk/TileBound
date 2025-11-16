@@ -782,6 +782,7 @@ GameObject:
   - component: {fileID: 3999823376594110723}
   - component: {fileID: 4445849271862732750}
   - component: {fileID: 2899059556344133979}
+  - component: {fileID: 3085185306403115719}
   m_Layer: 5
   m_Name: ButtonbaseTurn
   m_TagString: Untagged
@@ -847,6 +848,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3085185306403115719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048967834372668184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e22c0145bee978742b1ba2a5609c1c83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalSprite: {fileID: 21300000, guid: 740a506a3a6b14d2784d4cade4752dce, type: 3}
+  darkSprite: {fileID: 21300000, guid: 0b750c048b5004d29a1535a53db67eeb, type: 3}
 --- !u!1 &1222920426869657851
 GameObject:
   m_ObjectHideFlags: 0
@@ -995,6 +1010,7 @@ GameObject:
   - component: {fileID: 9086326813492154508}
   - component: {fileID: 1559505090099987356}
   - component: {fileID: 6777329478669224189}
+  - component: {fileID: 1984208092102626518}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -1103,6 +1119,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1984208092102626518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1239967694363449088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e22c0145bee978742b1ba2a5609c1c83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalSprite: {fileID: 21300000, guid: 6df97f49715fb47c8872de4ef2c1f0a0, type: 3}
+  darkSprite: {fileID: 21300000, guid: dd0f508dffe21433a9bc844ca39dffd3, type: 3}
 --- !u!1 &1840503384671136133
 GameObject:
   m_ObjectHideFlags: 0
@@ -1190,6 +1220,7 @@ GameObject:
   - component: {fileID: 6503180903757077152}
   - component: {fileID: 945441576910178429}
   - component: {fileID: 5080913555635112927}
+  - component: {fileID: 2714226217582701314}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -1298,6 +1329,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2714226217582701314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1938969514863360421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e22c0145bee978742b1ba2a5609c1c83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalSprite: {fileID: 21300000, guid: 7622469ff4011439d88f563c0ac9692b, type: 3}
+  darkSprite: {fileID: 21300000, guid: 25993670390a443e289e3be51e631ca5, type: 3}
 --- !u!1 &1997726488997448248
 GameObject:
   m_ObjectHideFlags: 0
@@ -2094,6 +2139,7 @@ GameObject:
   - component: {fileID: 6249473176489817649}
   - component: {fileID: 3361709495784043756}
   - component: {fileID: 3228668599008707370}
+  - component: {fileID: 1655672539091269332}
   m_Layer: 5
   m_Name: ButtonbaseOK
   m_TagString: Untagged
@@ -2159,6 +2205,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1655672539091269332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5497080870777624052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e22c0145bee978742b1ba2a5609c1c83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalSprite: {fileID: 21300000, guid: 740a506a3a6b14d2784d4cade4752dce, type: 3}
+  darkSprite: {fileID: 21300000, guid: 0b750c048b5004d29a1535a53db67eeb, type: 3}
 --- !u!1 &5788149717799974500
 GameObject:
   m_ObjectHideFlags: 0
@@ -2622,6 +2682,10 @@ MonoBehaviour:
   starPercentage: {fileID: 7419952462312646412}
   starText: {fileID: 7067945001680878239}
   starTextShadow: {fileID: 4424041276335642268}
+  okButton: {fileID: 0}
+  turnButton: {fileID: 0}
+  freezeButton: {fileID: 0}
+  starButton: {fileID: 0}
 --- !u!1 &7277311811943928262
 GameObject:
   m_ObjectHideFlags: 0
@@ -2887,6 +2951,7 @@ GameObject:
   - component: {fileID: 6520432353762922214}
   - component: {fileID: 2196166259253268870}
   - component: {fileID: 425235805678806034}
+  - component: {fileID: 1446825589169323606}
   m_Layer: 5
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -3017,6 +3082,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1446825589169323606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7762054637172629394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e22c0145bee978742b1ba2a5609c1c83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalSprite: {fileID: 21300000, guid: c4547ce2136404bc3b04aa204e34ad9e, type: 3}
+  darkSprite: {fileID: 21300000, guid: 9016b686d0c9040fbb70f57f47f5d520, type: 3}
 --- !u!1 &8372704877529004579
 GameObject:
   m_ObjectHideFlags: 0

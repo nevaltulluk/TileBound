@@ -76,5 +76,15 @@ namespace Code
         }
         
         public struct EndDoubleStarsBooster {}
+        
+        public struct ToggleDarkMode
+        {
+            public bool IsDark;
+
+            public ToggleDarkMode(bool isDark)
+            {
+                IsDark = isDark;
+            }
+        }
     }
 }

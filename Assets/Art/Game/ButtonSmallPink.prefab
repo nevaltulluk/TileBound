@@ -270,6 +270,7 @@ GameObject:
   - component: {fileID: 7172396892000225148}
   - component: {fileID: 2592178337143128694}
   - component: {fileID: 3803016195854079644}
+  - component: {fileID: 5405908236116694256}
   m_Layer: 5
   m_Name: ButtonSmallPink
   m_TagString: Untagged
@@ -379,6 +380,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5405908236116694256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3533804962030881693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e22c0145bee978742b1ba2a5609c1c83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalSprite: {fileID: 21300000, guid: 655354635c76d4986a89794504216c0b, type: 3}
+  darkSprite: {fileID: 21300000, guid: 3d0233e5b2c7c458690151a0f83753b8, type: 3}
 --- !u!1 &8576571896829753937
 GameObject:
   m_ObjectHideFlags: 0
