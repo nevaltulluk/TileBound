@@ -37,8 +37,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 686.8811, y: 8.3324}
-  m_SizeDelta: {x: 355.8687, y: 152.5633}
+  m_AnchoredPosition: {x: 685.1, y: 11.297}
+  m_SizeDelta: {x: 355, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4922242880257812161
 CanvasRenderer:
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a94c8b0fa4bac4d37ba5c35a1dfda007, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dbdc93250e60142aab1215260f3452d6, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2008,7 +2008,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 686.8811, y: 8.3324}
-  m_SizeDelta: {x: 355.8687, y: 152.5633}
+  m_SizeDelta: {x: 355, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6024839853564154168
 CanvasRenderer:
@@ -2038,7 +2038,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a94c8b0fa4bac4d37ba5c35a1dfda007, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dbdc93250e60142aab1215260f3452d6, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2130,7 +2130,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 686.8811, y: 8.3324}
-  m_SizeDelta: {x: 355.8687, y: 152.5633}
+  m_SizeDelta: {x: 355, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3469403900031869330
 CanvasRenderer:
@@ -2160,7 +2160,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a94c8b0fa4bac4d37ba5c35a1dfda007, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dbdc93250e60142aab1215260f3452d6, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2959,8 +2959,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -28.2}
-  m_SizeDelta: {x: 242.6169, y: 212.2854}
+  m_AnchoredPosition: {x: 20, y: 4}
+  m_SizeDelta: {x: 341.076, y: 298.4353}
   m_Pivot: {x: 0.5, y: 0.3955133}
 --- !u!222 &4976340792652850664
 CanvasRenderer:
@@ -3429,8 +3429,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0000052452, y: 48.263}
-  m_SizeDelta: {x: 244.5266, y: 244.5255}
+  m_AnchoredPosition: {x: 25.006, y: 80.505}
+  m_SizeDelta: {x: 309.0114, y: 309.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4895344869395496175
 CanvasRenderer:
@@ -3615,7 +3615,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 686.8811, y: 8.3324}
-  m_SizeDelta: {x: 355.8687, y: 152.5633}
+  m_SizeDelta: {x: 355, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4957813583977544697
 CanvasRenderer:
@@ -3645,7 +3645,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a94c8b0fa4bac4d37ba5c35a1dfda007, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dbdc93250e60142aab1215260f3452d6, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7596,7 +7596,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Waffle D\xFCkkani"
+  m_text: Waffle Ev
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 929e6d1cb8253473fa4eb9ad0ce7fa0a, type: 2}
   m_sharedMaterial: {fileID: -5544050357712049260, guid: 929e6d1cb8253473fa4eb9ad0ce7fa0a, type: 2}
@@ -9321,8 +9321,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000011444, y: -0.000002861}
-  m_SizeDelta: {x: 243.3032, y: 212.8904}
+  m_AnchoredPosition: {x: 18, y: 36.579403}
+  m_SizeDelta: {x: 326.9132, y: 286.0492}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2913712242091881435
 CanvasRenderer:
@@ -10355,7 +10355,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Waffle D\xFCkkani"
+  m_text: Waffle Ev
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c26aa2f4d17fb418c8ec32de5aa01acd, type: 2}
   m_sharedMaterial: {fileID: -5544050357712049260, guid: c26aa2f4d17fb418c8ec32de5aa01acd, type: 2}
