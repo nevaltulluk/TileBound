@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 9144300625058677039}
   - component: {fileID: 4984856490281977671}
   - component: {fileID: 6991934743235689133}
+  - component: {fileID: 4154171157495665634}
   m_Layer: 5
   m_Name: BckButton
   m_TagString: Untagged
@@ -256,6 +257,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4154171157495665634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 182344222079497749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e22c0145bee978742b1ba2a5609c1c83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalSprite: {fileID: 21300000, guid: 66861cd1ab50f4379a3e5f0a3fb6e336, type: 3}
+  darkSprite: {fileID: 21300000, guid: f1cac0546d33648a38da0ae2e659b743, type: 3}
 --- !u!1 &892886561677472172
 GameObject:
   m_ObjectHideFlags: 0
@@ -1340,6 +1355,7 @@ GameObject:
   - component: {fileID: 5418359587450419010}
   - component: {fileID: 9185037494566829039}
   - component: {fileID: 2032190926001099842}
+  - component: {fileID: 7732370332050431220}
   m_Layer: 5
   m_Name: BackHomeButton
   m_TagString: Untagged
@@ -1449,6 +1465,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7732370332050431220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6228456225912229404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e22c0145bee978742b1ba2a5609c1c83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalSprite: {fileID: 21300000, guid: 6074ac117c9d348a4812a8c723cbb959, type: 3}
+  darkSprite: {fileID: 21300000, guid: 4171ae0f8a3d14fbaa6fbaed85ad0a18, type: 3}
 --- !u!1 &6339088671052088333
 GameObject:
   m_ObjectHideFlags: 0
