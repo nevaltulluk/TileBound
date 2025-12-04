@@ -20,6 +20,7 @@ namespace Code
         }
         
         public struct RestartButtonClicked{}
+        public struct ResetTimer{}
         public struct StopGameInput{}
         public struct StartGameInput{}
         public struct OnGameStarted{}

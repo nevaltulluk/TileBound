@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour, IPersistable
         var dataManager = MainContainer.instance.Resolve<DataManager>();
         _eventBus = MainContainer.instance.Resolve<EventBus>();
         _eventBus.Subscribe<Events.RestartButtonClicked>(OnGameRestart);
+        _eventBus.Subscribe<Events.ResetTimer>(OnResetTimer);
         _eventBus.Subscribe<Events.GameStartButtonClicked>(OnGameStarted);
         _eventBus.Subscribe<Events.SpawnStar>(OnSpawnStar);
         _eventBus.Subscribe<Events.OnLevelStarted>(OnLevelStarted);
@@ -95,6 +96,12 @@ public class GameManager : MonoBehaviour, IPersistable
     private void OnTimeOver(Events.TimeOver obj)
     {
         ResetTimer();
+    }
+
+    private void OnResetTimer(Events.ResetTimer obj)
+    {
+        ResetTimer();
+        _isGameOver = false;
     }
 
     private void ResetTimer()
