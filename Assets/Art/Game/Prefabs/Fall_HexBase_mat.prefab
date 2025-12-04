@@ -79,7 +79,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 266938447438999978, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: tileType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 266938447438999978, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: isSpawnStar
@@ -91,7 +91,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7640786633013670486, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: tileType
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7640786633013670486, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: isSpawnStar
@@ -99,7 +99,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8119224627945416237, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: tileType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8119224627945416237, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: isSpawnStar
