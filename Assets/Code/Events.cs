@@ -86,5 +86,15 @@ namespace Code
                 IsDark = isDark;
             }
         }
+        
+        public struct SpecialTileUnlocked
+        {
+            public SpecialTiles SpecialTile;
+
+            public SpecialTileUnlocked(SpecialTiles specialTile)
+            {
+                SpecialTile = specialTile;
+            }
+        }
     }
 }

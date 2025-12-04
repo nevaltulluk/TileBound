@@ -2546,7 +2546,9 @@ PrefabInstance:
       propertyPath: m_characterSpacing
       value: -2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8590218632828659090, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
+    - {fileID: 8319236809458444754, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1326494927119530915, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
@@ -2555,17 +2557,17 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1407727063386998383, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 548589539324001862}
+      addedObject: {fileID: 7879771039824239933}
     - targetCorrespondingSourceObject: {fileID: 4043415429349873487, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3018890021356977387}
+      addedObject: {fileID: 5972661605742458465}
   m_SourcePrefab: {fileID: 100100000, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
 --- !u!1 &210703715114818919 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1407727063386998383, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
   m_PrefabInstance: {fileID: 1253638590200863496}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &548589539324001862
+--- !u!114 &7879771039824239933
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2589,7 +2591,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4043415429349873487, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
   m_PrefabInstance: {fileID: 1253638590200863496}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3018890021356977387
+--- !u!114 &5972661605742458465
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

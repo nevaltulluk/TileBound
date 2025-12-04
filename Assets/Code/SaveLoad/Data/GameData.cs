@@ -11,6 +11,7 @@ public class GameData
     public float currentCoin;
     public List<HexData> placedHexes = new List<HexData>();
     public int currentLevel;
+    public List<SpecialTiles> unlockedSpecialTiles = new List<SpecialTiles>();
 
     public GameData()
     {
@@ -27,6 +28,7 @@ public class GameData
         currentCoin = 0;
         currentLevel = 0;
         placedHexes.Clear();
+        unlockedSpecialTiles.Clear();
     }
 }
 
@@ -36,4 +38,5 @@ public class HexInfo : MonoBehaviour
     public Code.EventType EventType { get; set; }
     
     public int PrefabIndex { get; set; }
+    public SpecialTiles? SpecialTileType { get; set; } // null if not a special tile
 }

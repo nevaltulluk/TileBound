@@ -92,7 +92,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useAnimations: 1
   _startGameButton: {fileID: 3164806491262556727}
+  _marketButton: {fileID: 0}
+  _rewardsButton: {fileID: 0}
+  _collectionButton: {fileID: 0}
+  _settingsButton: {fileID: 0}
   hud: {fileID: 2259127591089604043}
+  _marketPopup: {fileID: 0}
+  _rewardsPopup: {fileID: 0}
+  _collectionPopup: {fileID: 0}
+  _settingsPopup: {fileID: 0}
   starText: {fileID: 5281986271167310205}
   starShadow: {fileID: 1602817570877179262}
   goldText: {fileID: 8598310230182911124}
@@ -2244,25 +2252,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8809625459063948682, guid: 957a42cb5957f48a1b4d6cae2e038995, type: 3}
+    - {fileID: 7892347043826753268, guid: 957a42cb5957f48a1b4d6cae2e038995, type: 3}
+    - {fileID: 5635938565852195564, guid: 957a42cb5957f48a1b4d6cae2e038995, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 717515168149134736, guid: 957a42cb5957f48a1b4d6cae2e038995, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4620553975434417792}
+      addedObject: {fileID: 4737761890865663012}
     - targetCorrespondingSourceObject: {fileID: 2477393867853434032, guid: 957a42cb5957f48a1b4d6cae2e038995, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3164806491262556727}
     - targetCorrespondingSourceObject: {fileID: 2477393867853434032, guid: 957a42cb5957f48a1b4d6cae2e038995, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3520609708798057115}
+      addedObject: {fileID: 783464199691854559}
   m_SourcePrefab: {fileID: 100100000, guid: 957a42cb5957f48a1b4d6cae2e038995, type: 3}
 --- !u!1 &590391629192479485 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 717515168149134736, guid: 957a42cb5957f48a1b4d6cae2e038995, type: 3}
   m_PrefabInstance: {fileID: 127330255732612973}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4620553975434417792
+--- !u!114 &4737761890865663012
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2341,7 +2351,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &3520609708798057115
+--- !u!114 &783464199691854559
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

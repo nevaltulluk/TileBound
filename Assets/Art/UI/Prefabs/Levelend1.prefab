@@ -19421,23 +19421,25 @@ PrefabInstance:
       propertyPath: m_text
       value: Devam
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8590218632828659090, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
+    - {fileID: 8319236809458444754, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1407727063386998383, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4749150715401715987}
+      addedObject: {fileID: 8149105657936783202}
     - targetCorrespondingSourceObject: {fileID: 4043415429349873487, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4824615160323416326}
+      addedObject: {fileID: 8460798994559215006}
   m_SourcePrefab: {fileID: 100100000, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
 --- !u!1 &210703715114818919 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1407727063386998383, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
   m_PrefabInstance: {fileID: 1253638590200863496}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4749150715401715987
+--- !u!114 &8149105657936783202
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -19461,7 +19463,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4043415429349873487, guid: 34b4634abb32e429cbe19758f4e23986, type: 3}
   m_PrefabInstance: {fileID: 1253638590200863496}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &4824615160323416326
+--- !u!114 &8460798994559215006
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

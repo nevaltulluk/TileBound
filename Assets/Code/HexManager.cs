@@ -43,6 +43,7 @@ namespace Code
         private List<GameObject> _addedHexes = new List<GameObject>();
         private int _currentLevel = 0;
         private DataManager _dataManager;
+        private HashSet<SpecialTiles> _unlockedSpecialTiles = new HashSet<SpecialTiles>();
         
         [Header("Preview (Next Piece)")]
         public Transform previewParent;        // assign in Inspector (a clean 3D spot/camera)
@@ -50,6 +51,7 @@ namespace Code
         private GameObject _previewInstance;   // spawned under previewParent
         private EventType _previewEventType;
         private int _previewPrefabIndex = -1;
+        private SpecialTiles? _previewSpecialTile = null; // null if preview is a regular hex
 
         private GameObject _pendingHex;
         private Vector2Int _pendingCoords;
@@ -66,6 +68,12 @@ namespace Code
             _eventBus = MainContainer.instance.Resolve<EventBus>();
             _eventBus.Subscribe<Events.RestartButtonClicked>(OnGameRestart);
             _eventBus.Subscribe<Events.RequestNextLevel>(OnRequestNextLevel);
+            _eventBus.Subscribe<Events.SpecialTileUnlocked>(OnSpecialTileUnlocked);
+        }
+        
+        private void OnSpecialTileUnlocked(Events.SpecialTileUnlocked evt)
+        {
+            UnlockSpecialTile(evt.SpecialTile);
         }
         
         private void OnRequestNextLevel(Events.RequestNextLevel obj)
@@ -93,22 +101,52 @@ namespace Code
                 _previewInstance = null;
             }
             _previewPrefabIndex = -1;
+            _previewSpecialTile = null;
         }
 
         private void GenerateNewPreview()
         {
             DestroyPreview();
 
-            _previewEventType = _currentEventType; // preview always reflects current theme
+            // Determine if we should show a special tile or a regular hex
+            // First, build a pool of available options
+            List<(GameObject prefab, EventType eventType, int prefabIndex, SpecialTiles? specialTile)> availableOptions = new List<(GameObject, EventType, int, SpecialTiles?)>();
+
+            // Add regular seasonal hexes
+            _previewEventType = _currentEventType;
             var list = GetPrefabListByEvent(_previewEventType);
-            if (list == null || list.Count == 0)
+            if (list != null && list.Count > 0)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list[i] != null)
+                    {
+                        availableOptions.Add((list[i], _previewEventType, i, null));
+                    }
+                }
+            }
+
+            // Add unlocked special tiles (regardless of season/level)
+            foreach (var specialTile in _unlockedSpecialTiles)
+            {
+                if (specialTiles != null && specialTiles.ContainsKey(specialTile) && specialTiles[specialTile] != null)
+                {
+                    availableOptions.Add((specialTiles[specialTile], EventType.None, -1, specialTile));
+                }
+            }
+
+            if (availableOptions.Count == 0)
             {
                 Debug.LogWarning($"No prefabs available for preview: {_previewEventType}");
                 return;
             }
 
-            _previewPrefabIndex = UnityEngine.Random.Range(0, list.Count);
-            var prefab = list[_previewPrefabIndex];
+            // Randomly select from available options
+            var selected = availableOptions[UnityEngine.Random.Range(0, availableOptions.Count)];
+            var prefab = selected.prefab;
+            _previewEventType = selected.eventType;
+            _previewPrefabIndex = selected.prefabIndex;
+            _previewSpecialTile = selected.specialTile;
 
             if (prefab == null || previewParent == null)
             {
@@ -233,7 +271,7 @@ namespace Code
 
         // --- MODIFIED METHOD ---
         // This is now primarily used by LoadData
-        public void InstantiateHex(Vector2Int hexCoordinates, Vector3 worldPosition, EventType eventType = EventType.None, int prefabIndex = -1)
+        public void InstantiateHex(Vector2Int hexCoordinates, Vector3 worldPosition, EventType eventType = EventType.None, int prefabIndex = -1, SpecialTiles? specialTileType = null)
         {
             // Use new Dictionary
             if (_takenHexes.ContainsKey(hexCoordinates))
@@ -241,44 +279,63 @@ namespace Code
                 return;
             }
 
-            var hexPrefabs = basicHexPrefabs;
-            switch (eventType)
+            GameObject hexPrefab = null;
+
+            // Check if this is a special tile
+            if (specialTileType.HasValue && specialTiles != null && specialTiles.ContainsKey(specialTileType.Value))
             {
-                case EventType.Spring:
-                    hexPrefabs = springPrefabs;
-                    break;
-                case EventType.Summer:
-                    hexPrefabs = summerPrefabs;
-                    break;
-                case EventType.Fall:
-                    hexPrefabs = fallPrefabs;
-                    break;
-                case EventType.Winter:
-                    hexPrefabs = winterPrefabs;
-                    break;
-                default:
-                    hexPrefabs = basicHexPrefabs;
-                    break;
+                hexPrefab = specialTiles[specialTileType.Value];
             }
-            
-            if (prefabIndex == -1)
+            else
             {
-                prefabIndex = UnityEngine.Random.Range(0, hexPrefabs.Count);
+                // Regular hex
+                var hexPrefabs = basicHexPrefabs;
+                switch (eventType)
+                {
+                    case EventType.Spring:
+                        hexPrefabs = springPrefabs;
+                        break;
+                    case EventType.Summer:
+                        hexPrefabs = summerPrefabs;
+                        break;
+                    case EventType.Fall:
+                        hexPrefabs = fallPrefabs;
+                        break;
+                    case EventType.Winter:
+                        hexPrefabs = winterPrefabs;
+                        break;
+                    default:
+                        hexPrefabs = basicHexPrefabs;
+                        break;
+                }
+                
+                if (prefabIndex == -1)
+                {
+                    prefabIndex = UnityEngine.Random.Range(0, hexPrefabs.Count);
+                }
+               
+                else if (prefabIndex >= hexPrefabs.Count)
+                {
+                    Debug.LogWarning($"Prefab index {prefabIndex} is out of bounds for {eventType} prefabs. Resetting to 0.");
+                    prefabIndex = 0;
+                }
+                
+                hexPrefab = hexPrefabs[prefabIndex];
             }
-           
-            else if (prefabIndex >= hexPrefabs.Count)
+
+            if (hexPrefab == null)
             {
-                Debug.LogWarning($"Prefab index {prefabIndex} is out of bounds for {eventType} prefabs. Resetting to 0.");
-                prefabIndex = 0;
+                Debug.LogError($"Cannot instantiate hex at {hexCoordinates}: prefab is null.");
+                return;
             }
-            
-            var hexPrefab = hexPrefabs[prefabIndex];
+
             GameObject newHex = Instantiate(hexPrefab, worldPosition, Quaternion.identity, hexParent);
             
             var hexInfo = newHex.AddComponent<HexInfo>();
             hexInfo.HexCoordinates = hexCoordinates;
             hexInfo.EventType = eventType;
             hexInfo.PrefabIndex = prefabIndex;
+            hexInfo.SpecialTileType = specialTileType;
             
             // Use new Dictionary
             _takenHexes.Add(hexCoordinates, newHex);
@@ -292,6 +349,9 @@ namespace Code
         {
             gameData.placedHexes.Clear();
             gameData.currentLevel = _currentLevel;
+            gameData.unlockedSpecialTiles.Clear();
+            gameData.unlockedSpecialTiles.AddRange(_unlockedSpecialTiles);
+            
             foreach (var hexObject in _addedHexes)
             {
                 var hexInfo = hexObject.GetComponent<HexInfo>();
@@ -302,7 +362,8 @@ namespace Code
                         q = hexInfo.HexCoordinates.x,
                         r = hexInfo.HexCoordinates.y,
                         eventType = hexInfo.EventType,
-                        prefabIndex = hexInfo.PrefabIndex
+                        prefabIndex = hexInfo.PrefabIndex,
+                        specialTileType = hexInfo.SpecialTileType
                     });
                 }
             }
@@ -314,6 +375,16 @@ namespace Code
             // Load level and set theme BEFORE loading hexes
             _currentLevel = gameData.currentLevel;
             SetEventTypeForLevel(_currentLevel);
+            
+            // Load unlocked special tiles
+            _unlockedSpecialTiles.Clear();
+            if (gameData.unlockedSpecialTiles != null)
+            {
+                foreach (var tile in gameData.unlockedSpecialTiles)
+                {
+                    _unlockedSpecialTiles.Add(tile);
+                }
+            }
 
             // Clear the board
             _takenHexes.Clear(); // Use new Dictionary
@@ -350,7 +421,7 @@ namespace Code
             {
                 Vector2Int coordinates = new Vector2Int(hexData.q, hexData.r);
                 Vector3 worldPosition = HexGrid.Instance.AxialToWorld(coordinates.x, coordinates.y);
-                InstantiateHex(coordinates, worldPosition, hexData.eventType, hexData.prefabIndex);
+                InstantiateHex(coordinates, worldPosition, hexData.eventType, hexData.prefabIndex, hexData.specialTileType);
             }
             GenerateNewPreview();
             ShowPlaceholdersForAllHexes(HexGrid.Instance);
@@ -440,28 +511,45 @@ namespace Code
 
             _pendingCoords = hexCoordinates;
 
-            // Get prefab from preview
-            List<GameObject> hexPrefabs = GetPrefabListByEvent(_previewEventType);
-            int prefabIndex = _previewPrefabIndex;
+            GameObject hexPrefab = null;
 
-            if (hexPrefabs == null || hexPrefabs.Count == 0)
+            // Check if preview is a special tile
+            if (_previewSpecialTile.HasValue && specialTiles != null && specialTiles.ContainsKey(_previewSpecialTile.Value))
             {
-                Debug.LogWarning($"No prefabs available for preview: {_previewEventType}. Using basic.");
-                hexPrefabs = basicHexPrefabs;
-                if (hexPrefabs.Count == 0)
+                hexPrefab = specialTiles[_previewSpecialTile.Value];
+            }
+            else
+            {
+                // Get prefab from preview (regular hex)
+                List<GameObject> hexPrefabs = GetPrefabListByEvent(_previewEventType);
+                int prefabIndex = _previewPrefabIndex;
+
+                if (hexPrefabs == null || hexPrefabs.Count == 0)
                 {
-                     Debug.LogError("Basic hex prefab list is also empty. Cannot spawn hex.");
-                     return;
+                    Debug.LogWarning($"No prefabs available for preview: {_previewEventType}. Using basic.");
+                    hexPrefabs = basicHexPrefabs;
+                    if (hexPrefabs.Count == 0)
+                    {
+                         Debug.LogError("Basic hex prefab list is also empty. Cannot spawn hex.");
+                         return;
+                    }
                 }
+
+                if (prefabIndex < 0 || prefabIndex >= hexPrefabs.Count)
+                {
+                    Debug.LogWarning($"Invalid preview index {prefabIndex}. Resetting to 0.");
+                    prefabIndex = 0; 
+                }
+                
+                hexPrefab = hexPrefabs[prefabIndex];
             }
 
-            if (prefabIndex < 0 || prefabIndex >= hexPrefabs.Count)
+            if (hexPrefab == null)
             {
-                Debug.LogWarning($"Invalid preview index {prefabIndex}. Resetting to 0.");
-                prefabIndex = 0; 
+                Debug.LogError("Cannot spawn hex: prefab is null.");
+                return;
             }
-            
-            var hexPrefab = hexPrefabs[prefabIndex];
+
             _pendingHex = Instantiate(hexPrefab, worldPosition, Quaternion.identity, hexParent);
         }
         
@@ -488,6 +576,7 @@ namespace Code
             hexInfo.HexCoordinates = _pendingCoords;
             hexInfo.EventType = _previewEventType;
             hexInfo.PrefabIndex = _previewPrefabIndex;
+            hexInfo.SpecialTileType = _previewSpecialTile;
         
             // 2. Register it
             _takenHexes.Add(_pendingCoords, _pendingHex); // Use new Dictionary
@@ -663,6 +752,34 @@ namespace Code
             }
 
             _activePlaceholders.Clear();
+        }
+        
+        /// <summary>
+        /// Unlocks a special tile, making it available in the preview pool regardless of season/level
+        /// </summary>
+        public void UnlockSpecialTile(SpecialTiles specialTile)
+        {
+            if (!_unlockedSpecialTiles.Contains(specialTile))
+            {
+                _unlockedSpecialTiles.Add(specialTile);
+                Debug.Log($"Unlocked special tile: {specialTile}");
+            }
+        }
+        
+        /// <summary>
+        /// Checks if a special tile is unlocked
+        /// </summary>
+        public bool IsSpecialTileUnlocked(SpecialTiles specialTile)
+        {
+            return _unlockedSpecialTiles.Contains(specialTile);
+        }
+        
+        /// <summary>
+        /// Gets all unlocked special tiles
+        /// </summary>
+        public HashSet<SpecialTiles> GetUnlockedSpecialTiles()
+        {
+            return new HashSet<SpecialTiles>(_unlockedSpecialTiles);
         }
         
         // Gizmo visualization for debugging trigger matches

@@ -16,6 +16,7 @@
         public int r;
         public EventType eventType;
         public int prefabIndex;
+        public SpecialTiles? specialTileType; // null if not a special tile
     }
     
 }

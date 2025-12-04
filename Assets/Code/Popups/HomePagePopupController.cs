@@ -12,7 +12,17 @@ public class HomePagePopupController : MonoBehaviour
     [SerializeField] public bool useAnimations = true;
     
     [SerializeField] private Button _startGameButton;
+    [SerializeField] private Button _marketButton;
+    [SerializeField] private Button _rewardsButton;
+    [SerializeField] private Button _collectionButton;
+    [SerializeField] private Button _settingsButton;
     [SerializeField] private GameObject hud;
+    
+    [Header("Popups")]
+    [SerializeField] private MarketPopup _marketPopup;
+    [SerializeField] private RewardsPopup _rewardsPopup;
+    [SerializeField] private CollectionPopup _collectionPopup;
+    [SerializeField] private SettingsPopup _settingsPopup;
     [SerializeField] private TextMeshProUGUI starText;
     [SerializeField] private TextMeshProUGUI starShadow;
     [SerializeField] private TextMeshProUGUI goldText;
@@ -24,6 +34,10 @@ public class HomePagePopupController : MonoBehaviour
         _eventBus.Subscribe<Events.OnStarCountChanged>(OnStarCountChanged);
         _eventBus.Subscribe<Events.OnGameFirstOpen>(OnGameFirstOpen);
         _startGameButton.onClick.AddListener(OnStartGameClicked);
+        _marketButton.onClick.AddListener(OnMarketButtonClicked);
+        _rewardsButton.onClick.AddListener(OnRewardsButtonClicked);
+        _collectionButton.onClick.AddListener(OnCollectionButtonClicked);
+        _settingsButton.onClick.AddListener(OnSettingsButtonClicked);
     }
 
     private void OnGameFirstOpen(Events.OnGameFirstOpen obj)
@@ -43,5 +57,37 @@ public class HomePagePopupController : MonoBehaviour
         _eventBus.Fire(new Events.GameStartButtonClicked());
         _eventBus.Fire(new Events.StartGameInput());
         UIAnimationHelper.SetActiveWithAnimation(hud, false, useAnimations, this);
+    }
+
+    private void OnMarketButtonClicked()
+    {
+        if (_marketPopup != null)
+        {
+            _marketPopup.Open();
+        }
+    }
+
+    private void OnRewardsButtonClicked()
+    {
+        if (_rewardsPopup != null)
+        {
+            _rewardsPopup.Open();
+        }
+    }
+
+    private void OnCollectionButtonClicked()
+    {
+        if (_collectionPopup != null)
+        {
+            _collectionPopup.Open();
+        }
+    }
+
+    private void OnSettingsButtonClicked()
+    {
+        if (_settingsPopup != null)
+        {
+            _settingsPopup.Open();
+        }
     }
 }
