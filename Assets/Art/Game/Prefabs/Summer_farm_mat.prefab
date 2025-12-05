@@ -22,11 +22,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2867361267110868145, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: tileType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7564368760528061673, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: tileType
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7640786633013670486, guid: cda01b45ba43aed4fa11ccf4a09e6115, type: 3}
       propertyPath: tileType
